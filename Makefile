@@ -1,7 +1,9 @@
 NAME = cub3D
 
+PAR = parsing
 
-SRC = main3d.c parse.c\
+SRC = main3d.c $(PAR)/parse.c $(PAR)/validate_map.c\
+		get_next_line/get_next_line.c
 
 
 OBJ = $(SRC:.c=.o)

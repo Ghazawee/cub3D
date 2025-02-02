@@ -65,5 +65,9 @@ typedef struct s_data
 
 int parse_elem_map(char *file, t_data *data);
 void	fr_array(char **array);
+void init_vars(t_vars *vars);
+int	validate_map(t_map *map, t_data *data);
+int err_msg(char *msg);
+char	*get_next_line(int fd);
 
 #endif

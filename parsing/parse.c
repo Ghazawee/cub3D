@@ -1,4 +1,4 @@
-#include "cub3d.h"
+#include "../cub3d.h"
 
 void init_vars(t_vars *vars)
 {
@@ -10,6 +10,7 @@ void init_vars(t_vars *vars)
 	vars->line = NULL;
 	vars->tmp = NULL;
 }
+
 // char    *read_file(char *file, t_vars *vars)
 // {
 // 	char buff[1024];
@@ -193,7 +194,6 @@ int parse_elem_map(char *file, t_data *data)
 	map = &data->map;
 	elements = &data->elements;
 	map->fullcub = read_file(file, &vars);
-	// free(vars.line);
 	if (!map->fullcub)
 		return (1);
 	map->cmap = ft_split(map->fullcub, '\n');
@@ -203,12 +203,15 @@ int parse_elem_map(char *file, t_data *data)
 	init_vars(&vars);
 	if(!parse_elements(elements, map, &vars))
 		return (1);
+	if (!validate_map(map, data))
+		return (1);
 	printf("NO: %s\n", elements->no);
 	printf("SO: %s\n", elements->so);
 	printf("WE: %s\n", elements->we);
 	printf("EA: %s\n", elements->ea);
 	printf("F: %d\n", elements->floor);
 	printf("C: %d\n", elements->ceiling);
+	
 	while (map->map[vars.j])
 	{
 		printf("%s\n", map->map[vars.j]);
