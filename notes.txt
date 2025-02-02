@@ -21,3 +21,8 @@ now this ???
 
 maybe i should change splitting by \n fck bro because i cant fix the issue above \n in the map itself
 ok for tomorrow,   
+
+
+if this is branch gaz3d:
+i just norminetted some stuff (25lines) and i think fixed the issue with floor and ceiling colours, i changed alot didnt want
+to push to main so new branch it is, tomorrow ask about these stuff

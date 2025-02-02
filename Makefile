@@ -3,7 +3,8 @@ NAME = cub3D
 PAR = parsing
 
 SRC = main3d.c $(PAR)/parse.c $(PAR)/validate_map.c\
-		get_next_line/get_next_line.c
+		get_next_line/get_next_line.c $(PAR)/map_utils.c $(PAR)/par_elem.c\
+		$(PAR)/utils.c
 
 
 OBJ = $(SRC:.c=.o)

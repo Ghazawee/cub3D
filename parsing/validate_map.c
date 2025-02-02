@@ -1,18 +1,5 @@
 #include "../cub3d.h"
 
-int err_msg(char *msg)
-{
-	while(*msg)
-		write(2, msg++, 1);
-	return (0);
-}
-
-int	valid_char(char c)
-{
-	if (c == '0' || c == '1' || c == ' ' || c == 'N' || c == 'S' || c == 'W' || c == 'E')
-		return (1);
-	return (0);
-}
 int	validate_map_chars(t_map *map, t_vars vars)
 {
 	while (map->map[vars.i])
@@ -37,26 +24,6 @@ int	validate_map_chars(t_map *map, t_vars vars)
 	}
 	if (!vars.k)
 		return(err_msg("Error: No player\n"));
-	return (1);
-}
-void calculate_map_rows(t_map *map)
-{
-	int i;
-
-	i = 0;
-	while (map->map[i])
-		i++;
-	map->rows = i;
-}
-
-int top_bot_row(char *line)
-{
-	while (*line)
-	{
-		if (*line != '1' && *line != ' ')
-			return (0);
-		line++;
-	}
 	return (1);
 }
 

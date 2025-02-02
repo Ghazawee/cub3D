@@ -6,12 +6,12 @@
 /*   By: mshaheen <mshaheen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/16 12:05:07 by mshaheen          #+#    #+#             */
-/*   Updated: 2024/10/01 12:21:26 by mshaheen         ###   ########.fr       */
+/*   Updated: 2025/02/03 00:40:32 by mshaheen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-
+// #include "../cub3d.h"
 void	*ft_calloc(size_t count, size_t size)
 {
 	unsigned char	*s;

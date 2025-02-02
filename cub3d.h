@@ -63,11 +63,30 @@ typedef struct s_data
     t_ray       ray;
 }t_data;
 
-int parse_elem_map(char *file, t_data *data);
 void	fr_array(char **array);
-void init_vars(t_vars *vars);
+
 int	validate_map(t_map *map, t_data *data);
 int err_msg(char *msg);
 char	*get_next_line(int fd);
+
+//------------------------------------------------------//
+//-----------------------Parsing-----------------------//
+//------------------------------------------------------//
+//-----------------------parse.c---------------------//
+int parse_elem_map(char *file, t_data *data);
+//-----------------------utils-----------------------//
+void    free_str(char **str);
+int	only_spaces(char *str);
+void init_vars(t_vars *vars);
+int err_msg(char *msg);
+//-----------------------par_elem----------------------//
+int store_elem(t_elements *elem, char *line);
+
+//----------------------validate_map----------------------//
+int	validate_map(t_map *map, t_data *data);
+
+//----------------------map_utils----------------------//
+int top_bot_row(char *line);
+void calculate_map_rows(t_map *map);
 
 #endif
