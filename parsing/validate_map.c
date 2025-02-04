@@ -41,6 +41,11 @@ int validate_map_walls(t_map *map, t_vars vars)
 		vars.j = 0;
 		while(map->map[i][vars.j] == ' ')
 			vars.j++;
+		if(map->map[i][vars.j] == '\0')
+		{
+			i++;
+			continue;
+		}
 		if (map->map[i][vars.j] != '1') // check if just spaces then dont throw error ??
 			return (err_msg("Error: Maper is not closed\n"));
 		vars.j = vars.k - 1;
@@ -55,11 +60,11 @@ int validate_map_walls(t_map *map, t_vars vars)
 
 int	check_map_space(t_map *map, int i, int j)
 {
-	if ((map->map[i][j + 1] && map->map[i][j + 1] != '1' 
-	&& map->map[i][j + 1] != ' ') || (map->map[i][j - 1] && 
+	if ((j + 1 < (int)(ft_strlen(map->map[i])) && map->map[i][j + 1] && map->map[i][j + 1] != '1' 
+	&& map->map[i][j + 1] != ' ') || (j > 0 && map->map[i][j - 1] && 
 	map->map[i][j - 1] != '1' && map->map[i][j - 1] != ' ')
-	|| (map->map[i + 1] && map->map[i + 1][j] != '1' 
-	&& map->map[i + 1][j] != ' ') || (map->map[i - 1] && 
+	|| (i + 1< (map->rows) && j < (int)ft_strlen(map->map[i + 1]) && map->map[i + 1] && map->map[i + 1][j] != '1' 
+	&& map->map[i + 1][j] != ' ') || (i > 0 && j < (int)ft_strlen(map->map[i - 1]) && map->map[i - 1] && 
 	map->map[i - 1][j] != '1' && map->map[i - 1][j] != ' '))
 		return (0);
 	return (1);
@@ -76,10 +81,56 @@ int validate_spaces(t_map *map)
 		j = 1;
 		while (map->map[i][j]) // maybe dont check last row as well
 		{
+			
 			if (map->map[i][j] == ' ') // can check if its within the column before calling the function
 			{
 				if(!check_map_space(map, i, j))
 					return (err_msg("Error: Space is not closed\n"));
+			}
+			j++;
+		}
+		i++;
+	}
+	return (1);
+}
+int check_neighbours(t_map *map, int i, int j)
+{
+	int rlen;
+
+	rlen = (int)ft_strlen(map->map[i]);
+	if(i <= 0 || i >= map->rows - 1 || j <= 0 || j >= rlen -1)
+		return (0);
+	if(j + 1 >= rlen || map->map[i][j+1] == '\0' ||  map->map[i][j+1] == ' ')
+		return (0);
+	if (j - 1 < 0 || map->map[i][j - 1] == '\0' || map->map[i][j - 1] == ' ')
+		return (0);
+	if (i + 1 >= map->rows || j >= (int)ft_strlen(map->map[i+1]) || map->map[i + 1][j] == '\0' || map->map[i + 1][j] == ' ')
+		return (0);
+	if (i - 1 < 0 || j >= (int)ft_strlen(map->map[i - 1]) || map->map[i -1][j] == '\0' || map->map[i -1][j] == ' ')
+		return (0);
+	return (1);
+}
+
+int valid_zero_player(t_map *map)
+{
+	int i;
+	int j;
+
+	i = 1;
+	while(i < map->rows -1)
+	{
+		j = 1;
+		while(j < (int)ft_strlen(map->map[i]) - 1)
+		{
+			if(map->map[i][j] == '0')
+			{
+				if(!check_neighbours(map, i, j))
+					return(err_msg("Error: Floor not enclosed\n"));
+			}
+			else if(map->map[i][j] == map->direction)
+			{
+				if(!check_neighbours(map, i, j))
+					return(err_msg("Error: Player not enclosed\n"));
 			}
 			j++;
 		}
@@ -97,7 +148,7 @@ int	validate_map(t_map *map, t_data *data)
 	if (!validate_map_chars(map, vars))
 		return (0);
 	calculate_map_rows(map);
-	if (!validate_map_walls(map, vars) || !validate_spaces(map)) // need to also check if 0 is closed by 1's like yousef said or stop validating spaces just validate 0 because it started giving invalid reads or do padding like tariq said
+	if (!validate_map_walls(map, vars) || !validate_spaces(map) || !valid_zero_player(map)) // need to also check if 0 is closed by 1's like yousef said or stop validating spaces just validate 0 because it started giving invalid reads or do padding like tariq said
 		return (0);
 	return (1);
 }
