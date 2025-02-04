@@ -115,7 +115,7 @@ int store_elem(t_elements *elem, char *line)
 	char *trim;
 	
 	arr = NULL;
-	trim = ft_strtrim(line, " \t\v\f\r");
+	trim = ft_strtrim(line, " \t\v\f\r\n");
 	if(!trim)
 		return (1);
 	if(trim[0] == 'N' || trim[0] == 'S' || trim[0] == 'W' || trim[0] == 'E')

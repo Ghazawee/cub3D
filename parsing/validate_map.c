@@ -41,8 +41,8 @@ int validate_map_walls(t_map *map, t_vars vars)
 		vars.j = 0;
 		while(map->map[i][vars.j] == ' ')
 			vars.j++;
-		if (map->map[i][vars.j] != '1')
-			return (err_msg("Error: Map is not closed\n"));
+		if (map->map[i][vars.j] != '1') // check if just spaces then dont throw error ??
+			return (err_msg("Error: Maper is not closed\n"));
 		vars.j = vars.k - 1;
 		while(vars.j >= 0 && map->map[i][vars.j] == ' ')
 			vars.j--;
@@ -74,9 +74,9 @@ int validate_spaces(t_map *map)
 	while (map->map[i])
 	{
 		j = 1;
-		while (map->map[i][j])
+		while (map->map[i][j]) // maybe dont check last row as well
 		{
-			if (map->map[i][j] == ' ')
+			if (map->map[i][j] == ' ') // can check if its within the column before calling the function
 			{
 				if(!check_map_space(map, i, j))
 					return (err_msg("Error: Space is not closed\n"));
@@ -97,7 +97,7 @@ int	validate_map(t_map *map, t_data *data)
 	if (!validate_map_chars(map, vars))
 		return (0);
 	calculate_map_rows(map);
-	if (!validate_map_walls(map, vars) || !validate_spaces(map))
+	if (!validate_map_walls(map, vars) || !validate_spaces(map)) // need to also check if 0 is closed by 1's like yousef said or stop validating spaces just validate 0 because it started giving invalid reads or do padding like tariq said
 		return (0);
 	return (1);
 }

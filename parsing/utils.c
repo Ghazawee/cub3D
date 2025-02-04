@@ -13,7 +13,7 @@ void init_vars(t_vars *vars)
 
 int	only_spaces(char *str)
 {
-	while (*str == ' ' || (*str >= 9 && *str <= 13))
+	while (*str == ' ' || (*str >= 9 && *str <= 13)) // add new line??
 		str++;
 	if (*str == '\0')
 		return (0);

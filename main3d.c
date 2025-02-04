@@ -37,6 +37,8 @@ void free_data(t_data *data)
 	free(data->map.fullcub);
 	if(data->map.cmap)
 		fr_array(data->map.cmap);
+	if(data->map.map)	
+		fr_array(data->map.map);
 	free(data->elements.no);
 	free(data->elements.so);
 	free(data->elements.we);
