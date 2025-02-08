@@ -1,10 +1,11 @@
 NAME = cub3D
 
 PAR = parsing
+EXE = exec
 
 SRC = main3d.c $(PAR)/parse.c $(PAR)/validate_map.c\
 		get_next_line/get_next_line.c $(PAR)/map_utils.c $(PAR)/par_elem.c\
-		$(PAR)/utils.c
+		$(PAR)/utils.c $(EXE)/handle_actions.c
 
 
 OBJ = $(SRC:.c=.o)
@@ -17,6 +18,8 @@ DEL = rm -f
 
 LIBFT_DIR = libft
 LIBFT = $(LIBFT_DIR)/libft.a
+MLX_DIR = mlx_linux
+MLX = $(MLX_DIR)/libmlx.a
 
 GR	= \033[32;1m
 RE	= \033[31;1m

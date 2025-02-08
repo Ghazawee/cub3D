@@ -49,9 +49,59 @@ void	init_data(t_data *data)
 {
 	ft_bzero(&data->elements, sizeof(t_elements));
 	ft_bzero(&data->map, sizeof(t_map));
-	// ft_bzero(&data->player, sizeof(t_player));
+	ft_bzero(&data->mlx, sizeof(t_mlx));
+	ft_bzero(&data->player, sizeof(t_player));
+	ft_bzero(&data->ray, sizeof(t_ray));
 	// ft_bzero(&data->image, sizeof(t_image));
-	// ft_bzero(&data->ray, sizeof(t_ray));
+}
+
+void	init_player(t_data *data)
+{
+	data->player.pos_x = data->map.p_x + 0.5;
+	data->player.pos_y = data->map.p_y + 0.5;
+	if (data->map.direction == 'N')
+	{
+		data->player.dir_y = -1;
+		data->player.plane_x = 0.66; // FOV at 66 degrees, 2 * arctan(0.66/1.0) = 66 degrees
+	}
+	else if (data->map.direction == 'S')
+	{
+		data->player.dir_y = 1;
+		data->player.plane_x = -0.66;
+	}
+	else if (data->map.direction == 'W')
+	{
+		data->player.dir_x = -1;
+		data->player.plane_y = -0.66;
+	}
+	else if (data->map.direction == 'E')
+	{
+		data->player.dir_x = 1;
+		data->player.plane_y = 0.66;
+	}
+}
+
+void	init_start_game(t_data *data)
+{
+	data->mlx.mlx = mlx_init();
+	if (!data->mlx.mlx)
+	{
+		write(2, "Error: mlx_init failed\n", 24);
+		free_data(data);
+		exit(1);
+	}
+	data->mlx.win = mlx_new_window(data->mlx.mlx, WIN_HEIGHT, WIN_WIDTH, "cub3D");
+	if (!data->mlx.win)
+	{
+		write(2, "Error: mlx_new_window failed\n", 29);
+		free_data(data);
+		exit(1);
+	}
+	init_player(&data);
+	mlx_hook(data->mlx.win, 2, 0, key_events, data);
+	mlx_hook(data->mlx.win, 17, 0, exit_window, data);
+	// mlx_loop(data->mlx.mlx);
+	mlx_loop_hook(data->mlx.mlx, render_next_frame, data);
 }
 
 int	main(int ac, char **av)
@@ -70,12 +120,11 @@ int	main(int ac, char **av)
 	}
 	printf("file: %s valid\n", av[1]);
 	init_data(&data);
-	parse_elem_map(av[1], &data);
+	if (parse_elem_map(av[1], &data))
+	{
+		free_data(&data);
+		return (1);
+	}
+	init_start_game(&data);
 	free_data(&data);
-	// free(data.map.fullcub);
-	// fr_array(data.map.cmap);
-	// free(data.elements.no);
-	// free(data.elements.so);
-	// free(data.elements.we);
-	// free(data.elements.ea);
 }
