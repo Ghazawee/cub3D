@@ -162,9 +162,9 @@ int parse_elem_map(char *file, t_data *data)
 		return (err_msg("Error: Malloc\n"));
 	init_vars(&vars);
 	if(!parse_elements(elements, map, &vars))
-		return (1);
+		return (0);
 	if (!validate_map(map, data))
-		return (1);
+		return (0);
 	printf("NO: %s\n", elements->no);
 	printf("SO: %s\n", elements->so);
 	printf("WE: %s\n", elements->we);
@@ -176,5 +176,5 @@ int parse_elem_map(char *file, t_data *data)
 		printf("%s\n", map->map[vars.j]);
 		vars.j++;
 	}
-	return (0);
+	return (1);
 }

@@ -1,6 +1,6 @@
 #include "cub3d.h"
 
-// void	fr_array(char ***arr)
+// void	fr_arrray(char ***arr)
 // {
 //     int i;
 
@@ -101,7 +101,7 @@ void	init_start_game(t_data *data)
 	mlx_hook(data->mlx.win, 2, 0, key_events, data);
 	mlx_hook(data->mlx.win, 17, 0, exit_window, data);
 	// mlx_loop(data->mlx.mlx);
-	mlx_loop_hook(data->mlx.mlx, render_next_frame, data);
+	mlx_loop_hook(data->mlx.mlx, render_frames, data);
 }
 
 int	main(int ac, char **av)
@@ -120,7 +120,7 @@ int	main(int ac, char **av)
 	}
 	printf("file: %s valid\n", av[1]);
 	init_data(&data);
-	if (parse_elem_map(av[1], &data))
+	if (!parse_elem_map(av[1], &data))
 	{
 		free_data(&data);
 		return (1);
