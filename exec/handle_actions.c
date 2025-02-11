@@ -1,6 +1,6 @@
 #include "../cub3d.h"
 
-void exit_window(t_data *data)
+int exit_window(t_data *data)
 {
     free_data(data);
     free(data->mlx.mlx);
@@ -13,26 +13,28 @@ void move_vertically(t_data *data, int direction)
 {
     double new_x;
     double new_y;
+    int curr_y;
+    int curr_x;
 
+    curr_y = (int)data->player.pos_y;
+    curr_x = (int)data->player.pos_x;
     if(direction == MUP)
     {
         new_x = data->player.pos_x + data->player.dir_x * MOV_SPEED;
-        new_y = data->player.pos_y + data->player.dir_y * MOV_SPEED;
-        if (data->map.map[(int)new_y][(int)new_x] != '1')
-        {
+        if(data->map.map[curr_y][(int)new_x] != '1')
             data->player.pos_x = new_x;
+        new_y = data->player.pos_y + data->player.dir_y * MOV_SPEED;
+        if (data->map.map[(int)new_y][curr_x] != '1')
             data->player.pos_y = new_y;
-        }
     }
     else
     {
         new_x = data->player.pos_x - data->player.dir_x * MOV_SPEED;
-        new_y = data->player.pos_y - data->player.dir_y * MOV_SPEED;
-        if (data->map.map[(int)new_y][(int)new_x] != '1')
-        {
+         if(data->map.map[curr_y][(int)new_x] != '1')
             data->player.pos_x = new_x;
+        new_y = data->player.pos_y - data->player.dir_y * MOV_SPEED;
+        if (data->map.map[(int)new_y][curr_x] != '1')
             data->player.pos_y = new_y;
-        }
     }
 }
 // might need to change the way of checking  maybe check if new x first with current y and then check if new y with current x
@@ -40,27 +42,30 @@ void move_horizontally(t_data *data, int direction)
 {
     double new_x;
     double new_y;
+    int curr_y;
+    int curr_x;
 
+    curr_y = (int)data->player.pos_y;
+    curr_x = (int)data->player.pos_x;
     if (direction == MRIGHT)
     {
         new_x = data->player.pos_x + data->player.plane_x * MOV_SPEED;
-        new_y = data->player.pos_y + data->player.plane_y * MOV_SPEED;
-        if (data->map.map[(int)new_y][(int)new_x] != '1')
-        {
+        if(data->map.map[curr_y][(int)new_x] != '1')
             data->player.pos_x = new_x;
+        new_y = data->player.pos_y + data->player.plane_y * MOV_SPEED;
+        if (data->map.map[(int)new_y][curr_x] != '1')
             data->player.pos_y = new_y;
-        }
     }
     else
     {
         new_x = data->player.pos_x - data->player.plane_x * MOV_SPEED;
-        new_y = data->player.pos_y - data->player.plane_y * MOV_SPEED;
-        if (data->map.map[(int)new_y][(int)new_x] != '1') // maybe check x first then y just to be sure do the same thing in vertical movement
-        {
+        if(data->map.map[curr_y][(int)new_x] != '1')
             data->player.pos_x = new_x;
+        new_y = data->player.pos_y - data->player.plane_y * MOV_SPEED;    
+       if (data->map.map[(int)new_y][curr_x] != '1')
             data->player.pos_y = new_y;
-        }
     }
+       
 }
 void rotate(t_player *pl, int direction)
 {
@@ -81,7 +86,7 @@ void rotate(t_player *pl, int direction)
     pl->plane_y = old_plane_x * sin(rot) + pl->plane_y * cos(rot);
 }
 
-void key_events(int keycode, t_data *data)
+int key_events(int keycode, t_data *data)
 {
     if (keycode == 65307)
         exit_window(data);
@@ -97,4 +102,5 @@ void key_events(int keycode, t_data *data)
         rotate(&data->player, L_ROTATE);
     if (keycode == 65363)
         rotate(&data->player, R_ROTATE);
+    return(0);
 }

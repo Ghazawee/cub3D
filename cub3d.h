@@ -1,7 +1,7 @@
 #ifndef CUB3D_H
 # define CUB3D_H
 #include "libft/libft.h"
-#include "mlx_linux/mlx.h"
+#include "mlx_mac/mlx.h"
 //#include "gnl/get_next_line.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -112,7 +112,7 @@ typedef struct s_data
 }t_data;
 
 void	fr_array(char **array);
-
+void free_data(t_data *data);
 int	validate_map(t_map *map, t_data *data);
 int err_msg(char *msg);
 char	*get_next_line(int fd);
@@ -141,6 +141,7 @@ void calculate_map_rows(t_map *map);
 //-----------------------Execution-----------------------//
 //------------------------------------------------------//
 //------------------handle_actions.c----------------//
-void key_events(int keycode, t_data *data);
-void exit_window(t_data *data);
+int key_events(int keycode, t_data *data);
+int exit_window(t_data *data);
+int    render_frames(t_data *data);
 #endif

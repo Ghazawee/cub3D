@@ -25,6 +25,7 @@ void dda_algo(t_ray *ray, t_data *data)
 
 void init_step_side(t_ray *ray, t_player *player, t_data *data)
 {
+    (void)data;
     if (ray->ray_dir_x < 0)
     {
         ray->step_x = -1;
@@ -50,7 +51,7 @@ void init_step_side(t_ray *ray, t_player *player, t_data *data)
 void cast_rays(t_ray *ray, t_player *player, t_data *data)
 {
     int i;
-    int j;
+    // int j;
 
     i = 0;
     while(i < WIN_WIDTH) // might change to < 30 or something smaller for performance, the more rays the higher resolution but at cost of performance// for visualizing i think low res is fine because its a 2d map
@@ -70,9 +71,10 @@ void cast_rays(t_ray *ray, t_player *player, t_data *data)
     }
 }
 
-void    render_frames(t_data *data)
+int    render_frames(t_data *data)
 {
     mlx_clear_window(data->mlx.mlx, data->mlx.win);
     //draw_grid_map(data);// need to implement to visualize,
     cast_rays(&data->ray, &data->player, data);
+    return(0);
 }

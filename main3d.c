@@ -97,11 +97,12 @@ void	init_start_game(t_data *data)
 		free_data(data);
 		exit(1);
 	}
-	init_player(&data);
+	init_player(data);
 	mlx_hook(data->mlx.win, 2, 0, key_events, data);
 	mlx_hook(data->mlx.win, 17, 0, exit_window, data);
 	// mlx_loop(data->mlx.mlx);
 	mlx_loop_hook(data->mlx.mlx, render_frames, data);
+	mlx_loop(data->mlx.win);
 }
 
 int	main(int ac, char **av)

@@ -55,24 +55,32 @@ int store_tex(t_elements *elem, char *trim, char **arr)
 {
 	if(ft_strncmp(arr[0], "NO", 3) == 0)
 	{
+		if(elem->no)
+			return (1);
 		elem->no = ft_strdup(trim);
 		if (!elem->no)
 			return (1);
 	}
 	else if(ft_strncmp(arr[0], "SO", 3) == 0)
 	{
+		if(elem->so)
+			return(1);
 		elem->so = ft_strdup(trim);
 		if (!elem->so)
 			return (1);
 	}
 	else if(ft_strncmp(arr[0], "WE", 3) == 0)
 	{
+		if(elem->we)
+			return(1);
 		elem->we = ft_strdup(trim);
 		if (!elem->we)
 			return (1);
 	}
 	else if(ft_strncmp(arr[0], "EA", 3) == 0)
 	{
+		if(elem->ea)
+			return(1);
 		elem->ea = ft_strdup(trim);
 		if (!elem->ea)
 			return (1);
@@ -120,9 +128,9 @@ int store_elem(t_elements *elem, char *line)
 		return (1);
 	if(trim[0] == 'N' || trim[0] == 'S' || trim[0] == 'W' || trim[0] == 'E')
 		return (handle_tex(elem, trim, arr));
-	else if(trim[0] == 'F')
+	else if(trim[0] == 'F' && trim[1] == ' ')
 		elem->floor = parse_rgb(trim + 1); 
-	else if(trim[0] == 'C')
+	else if(trim[0] == 'C' && trim[1] == ' ')
 		elem->ceiling = parse_rgb(trim + 1); 
 	else
 		return (free(trim), 1);
