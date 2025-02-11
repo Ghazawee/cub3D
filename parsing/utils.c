@@ -5,6 +5,7 @@ void init_vars(t_vars *vars)
 	vars->i = 0;
 	vars->j = 0;
 	vars->k = 0;
+	vars->c = 0;
 	vars->fd = -1;
 	vars->ret = 0;
 	vars->line = NULL;

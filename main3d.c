@@ -52,7 +52,14 @@ void	init_data(t_data *data)
 	ft_bzero(&data->mlx, sizeof(t_mlx));
 	ft_bzero(&data->player, sizeof(t_player));
 	ft_bzero(&data->ray, sizeof(t_ray));
-	// ft_bzero(&data->image, sizeof(t_image));
+	ft_bzero(&data->image, sizeof(t_image));
+}
+void my_mlx_pixel_put(t_image *img, int x, int y, int color)
+{
+	char	*dst;
+
+	dst = img->addr + (y * img->line_len + x * (img->bpp / 8));
+	*(unsigned int *)dst = color;
 }
 
 void	init_player(t_data *data)
@@ -90,19 +97,21 @@ void	init_start_game(t_data *data)
 		free_data(data);
 		exit(1);
 	}
-	data->mlx.win = mlx_new_window(data->mlx.mlx, WIN_HEIGHT, WIN_WIDTH, "cub3D");
+	data->mlx.win = mlx_new_window(data->mlx.mlx, WIN_WIDTH, WIN_HEIGHT, "cub3D");
 	if (!data->mlx.win)
 	{
 		write(2, "Error: mlx_new_window failed\n", 29);
 		free_data(data);
 		exit(1);
 	}
+	data->image.img = mlx_new_image(data->mlx.mlx, WIN_WIDTH, WIN_HEIGHT);
+	data->image.addr = mlx_get_data_addr(data->image.img, &data->image.bpp, &data->image.line_len, &data->image.endian);
 	init_player(data);
-	mlx_hook(data->mlx.win, 2, 0, key_events, data);
+	mlx_hook(data->mlx.win, 2, 1L << 0, key_events, data);
 	mlx_hook(data->mlx.win, 17, 0, exit_window, data);
 	// mlx_loop(data->mlx.mlx);
 	mlx_loop_hook(data->mlx.mlx, render_frames, data);
-	mlx_loop(data->mlx.win);
+	mlx_loop(data->mlx.mlx);
 }
 
 int	main(int ac, char **av)

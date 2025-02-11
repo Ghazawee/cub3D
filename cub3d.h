@@ -28,6 +28,7 @@ typedef struct s_vars
     int		i;
     int		j;
     int     k;
+    int     c;
     int     fd;
     int     ret;
     char   *tmp;
@@ -116,6 +117,7 @@ void free_data(t_data *data);
 int	validate_map(t_map *map, t_data *data);
 int err_msg(char *msg);
 char	*get_next_line(int fd);
+void my_mlx_pixel_put(t_image *img, int x, int y, int color);
 
 //------------------------------------------------------//
 //-----------------------Parsing-----------------------//
@@ -144,4 +146,7 @@ void calculate_map_rows(t_map *map);
 int key_events(int keycode, t_data *data);
 int exit_window(t_data *data);
 int    render_frames(t_data *data);
+
+void draw_gmap(t_map *map, t_vars *v, t_data *data);
+void draw_player(t_player *player, t_vars *v, t_data *data);
 #endif

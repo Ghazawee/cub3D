@@ -13,8 +13,8 @@ int	validate_map_chars(t_map *map, t_vars vars)
 			{
 				if (vars.k)
 					return(err_msg("Error: Multiple players\n"));
-				map->p_x = vars.i;
-				map->p_y = vars.j;
+				map->p_x = vars.j;
+				map->p_y = vars.i;
 				map->direction = map->map[vars.i][vars.j];
 				vars.k++;
 			}
@@ -139,6 +139,24 @@ int valid_zero_player(t_map *map)
 	return (1);
 }
 
+void calculate_map_cols(t_map *map)
+{
+	int i;
+	int len;
+	int max;
+
+	i = 0;
+	max = 0;
+	while(map->map[i])
+	{
+		len = ft_strlen(map->map[i]);
+		if (len > max)
+			max = len;
+		i++;
+	}
+	map->cols = max;
+}
+
 int	validate_map(t_map *map, t_data *data)
 {
 	t_vars vars;
@@ -148,6 +166,7 @@ int	validate_map(t_map *map, t_data *data)
 	if (!validate_map_chars(map, vars))
 		return (0);
 	calculate_map_rows(map);
+	calculate_map_cols(map);
 	if (!validate_map_walls(map, vars) || !validate_spaces(map) || !valid_zero_player(map)) // need to also check if 0 is closed by 1's like yousef said or stop validating spaces just validate 0 because it started giving invalid reads or do padding like tariq said
 		return (0);
 	return (1);

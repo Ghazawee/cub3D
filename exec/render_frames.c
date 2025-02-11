@@ -6,6 +6,12 @@ void dda_algo(t_ray *ray, t_data *data)
     ray->hit = 0;
     while(!ray->hit)
     {
+        if(ray->map_x < 0 || ray->map_y < 0 || ray->map_y >= data->map.rows 
+            || ray->map_x >= (int)ft_strlen(data->map.map[ray->map_y]))
+        {
+            ray->hit = 1;
+            break;
+        }
         if (ray->side_dist_x < ray->side_dist_y)
         {
             ray->side_dist_x += ray->delta_dist_x;
@@ -18,7 +24,7 @@ void dda_algo(t_ray *ray, t_data *data)
             ray->map_y += ray->step_y;
             ray->side = 1;
         }
-        if (data->map.map[ray->map_x][ray->map_y] == '1')
+        if (data->map.map[ray->map_y][ray->map_x] == '1')
             ray->hit = 1;
     }
 }
@@ -48,6 +54,8 @@ void init_step_side(t_ray *ray, t_player *player, t_data *data)
     }
 }
 
+
+
 void cast_rays(t_ray *ray, t_player *player, t_data *data)
 {
     int i;
@@ -73,8 +81,16 @@ void cast_rays(t_ray *ray, t_player *player, t_data *data)
 
 int    render_frames(t_data *data)
 {
-    mlx_clear_window(data->mlx.mlx, data->mlx.win);
+    t_vars vars;
+
+    // mlx_clear_window(data->mlx.mlx, data->mlx.win);
+    ft_bzero(data->image.addr, WIN_WIDTH * WIN_HEIGHT * (data->image.bpp / 8));
+    init_vars(&vars);
+    draw_gmap(&data->map, &vars, data);
+    init_vars(&vars);
+    draw_player(&data->player, &vars, data);
     //draw_grid_map(data);// need to implement to visualize,
     cast_rays(&data->ray, &data->player, data);
+    mlx_put_image_to_window(data->mlx.mlx, data->mlx.win, data->image.img, 0, 0);
     return(0);
 }
