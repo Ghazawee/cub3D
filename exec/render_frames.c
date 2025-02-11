@@ -65,7 +65,7 @@ void cast_rays(t_ray *ray, t_player *player, t_data *data)
         ray->hit = 0;
         init_step_side(ray, player, data);
         dda_algo(ray, data);
-        //need to implement function to draw rayys as lines to visualize
+        //need to implement function to draw rayys as lines to visualize// later on start calculating distance to wall and stuff i think instead of drawing a line
         i++;
     }
 }

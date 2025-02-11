@@ -27,6 +27,8 @@ char    *read_file(char *file, t_vars *vars)
 	return (vars->line);
 }
 
+//i think i am not using this function anymore read_file
+
 int empty_line(char *str)
 {
 	// while(*str)

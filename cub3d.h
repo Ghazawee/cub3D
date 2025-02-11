@@ -16,6 +16,12 @@
 # define TEX_SIZE 64
 # define MOV_SPEED 0.1
 # define ROT_SPEED 0.1
+# define MLEFT 0
+# define MRIGHT 1
+# define MUP 1
+# define MDOWN 0
+# define R_ROTATE 1
+# define L_ROTATE 0
 
 typedef struct s_vars
 {
