@@ -21,8 +21,13 @@ LIBFT_DIR = libft
 LIBFT = $(LIBFT_DIR)/libft.a
 MLX_DIR = mlx_mac
 MLX = $(MLX_DIR)/libmlx.a
-MLXL_DIR = mlx_linux
-MLXL = $(MLXL_DIR)/libmlx.a
+MFLAGS = -L$(MLX_DIR) -lmlx -framework OpenGL -framework AppKit
+
+ifeq ($(shell uname), Linux)
+	MLX_DIR = mlx_linux
+	MLX = $(MLX_DIR)/libmlx.a
+	MFLAGS = -L$(MLX_DIR) -lmlx -lXext -lX11 -lm -lz
+endif
 
 GR	= \033[32;1m
 RE	= \033[31;1m
@@ -31,15 +36,15 @@ CY	= \033[36;1m
 RC	= \033[0m
 
 
-all: $(LIBFT) $(MLXL) $(NAME)
+all: $(LIBFT) $(MLX) $(NAME)
 
 $(LIBFT):
 	@echo "$(CY)Building libft$(RC)"
 	@make bonus -C $(LIBFT_DIR)
 
-$(MLXL):
+$(MLX):
 	@echo "$(CY)Building Minilibx$(RC)"
-	@make -C $(MLXL_DIR)
+	@make -C $(MLX_DIR)
 
 %.o: %.c cub3d.h
 	@echo "$(GR)Compiling $<$(RC)"
@@ -47,7 +52,7 @@ $(MLXL):
 
 $(NAME): $(OBJ)
 	@echo "$(CY)Building cub3D$(RC)"
-	@$(CC) -o $@ $^ $(LIBFT) -L$(MLXL_DIR) -fsanitize=address -lmlx -lXext -lX11 -lm -lz
+	@$(CC) -o $@ $^ $(LIBFT) $(MFLAGS) -fsanitize=address
 
 # $(NAME): $(OBJ)
 # @$(CC) -o $@ $^ $(LIBFT) -L$(MLX_DIR) -lmlx -framework OpenGL -framework AppKit
@@ -56,13 +61,13 @@ $(NAME): $(OBJ)
 clean:
 	@echo "$(YE)Cleaning all object files$(RC)\n"
 	@make clean -C $(LIBFT_DIR)
-	@make clean -C $(MLXL_DIR)
+	@make clean -C $(MLX_DIR)
 	@$(DEL) $(OBJ)
 
 fclean: clean
 	@echo "$(YE)Cleaning all additional objects and libraries$(RC)\n"
 	@make fclean -C $(LIBFT_DIR)
-	@$(DEL) $(MLXL_DIR)/libmlx.a
+	@$(DEL) $(MLX_DIR)/libmlx.a
 	@$(DEL) $(NAME)
 
 re: fclean all

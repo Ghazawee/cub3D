@@ -148,19 +148,19 @@ void rotate(t_player *pl, int direction)
 
 int key_events(int keycode, t_data *data)
 {
-    if (keycode == 65307)
+    if (keycode == ESC_KEY)
         exit_window(data);
-    if (keycode == 119)
+    if (keycode == W_KEY)
         move_vertically(data, MUP); // can make it one function and send flag same for others
-    if (keycode == 115)
+    if (keycode == S_KEY)
         move_vertically(data, MDOWN);
-    if (keycode == 97)
+    if (keycode == A_KEY)
         move_horizontally(data, MLEFT);
-    if (keycode == 100)
+    if (keycode == D_KEY)
         move_horizontally(data, MRIGHT);
-    if (keycode == 65361)
+    if (keycode == LEFT_ARROW)
         rotate(&data->player, L_ROTATE);
-    if (keycode == 65363)
+    if (keycode == RIGHT_ARROW)
         rotate(&data->player, R_ROTATE);
     return(0);
 }

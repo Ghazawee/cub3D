@@ -74,6 +74,10 @@ void cast_rays(t_ray *ray, t_player *player, t_data *data)
         ray->hit = 0;
         init_step_side(ray, player, data);
         dda_algo(ray, data);
+        if(ray->side == 0)
+            ray->perp_wall_dist = ray->side_dist_x - ray->delta_dist_x;
+        else
+            ray->perp_wall_dist = ray->side_dist_y - ray->delta_dist_y;
         //need to implement function to draw rayys as lines to visualize// later on start calculating distance to wall and stuff i think instead of drawing a line
         i++;
     }

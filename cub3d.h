@@ -1,7 +1,7 @@
 #ifndef CUB3D_H
 # define CUB3D_H
 #include "libft/libft.h"
-#include "mlx_mac/mlx.h"
+// #include "mlx_mac/mlx.h"
 //#include "gnl/get_next_line.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -11,10 +11,33 @@
 #include <errno.h>
 #include <math.h>
 
+#if __APPLE__
+#include "mlx_mac/mlx.h"
+#elif __linux__
+#include "mlx_linux/mlx.h"
+#endif
+
+#if __APPLE__
+    #define ESC_KEY 53
+    #define W_KEY 13
+    #define A_KEY 0
+    #define S_KEY 1
+    #define D_KEY 2
+    #define RIGHT_ARROW 124
+    #define LEFT_ARROW 123
+#elif __linux__
+    #define ESC_KEY 65307
+    #define W_KEY 119
+    #define A_KEY 97
+    #define S_KEY 115
+    #define D_KEY 100
+    #define RIGHT_ARROW 65363
+    #define LEFT_ARROW 65361
+#endif
 # define WIN_WIDTH 800
 # define WIN_HEIGHT 600
 # define TEX_SIZE 64
-# define MOV_SPEED 0.1
+# define MOV_SPEED 0.3
 # define ROT_SPEED 0.1
 # define MLEFT 0
 # define MRIGHT 1
