@@ -77,8 +77,8 @@ void    draw_walls(t_ray *ray, t_data *data, int i)
     int drawend;
     int colour;
 
-    lineheight = (int)(WIN_HEIGHT / ray->perp_wall_dist);
-    drawstart = -lineheight / 2 + WIN_HEIGHT / 2;
+    lineheight = (int)(WIN_HEIGHT / ray->perp_wall_dist); // height of line 1/perp_wall_dist * win_height to pixel the coordinate
+    drawstart = -lineheight / 2 + WIN_HEIGHT / 2; // win height/2 is the center of the screen, -lineheight/2, since lineheight goes above and below the center of screen
     if(drawstart < 0)
         drawstart = 0;
     drawend = lineheight / 2 + WIN_HEIGHT / 2;
