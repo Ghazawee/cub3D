@@ -14,116 +14,125 @@ int exit_window(t_data *data)
     // free(data->mlx.mlx);
     exit(0);
 }
+//ithink not needed anymore
+void diagonal_blocked(t_data *data, double move_x,double move_y, t_cord *vars)
+{
+    // double distance_to_corner;
+
+    if (vars->curr_y >= 0 && vars->curr_y < data->map.rows && 
+        vars->new_x >= 0 && vars->new_x < vars->row_length_cy && 
+        data->map.map[vars->curr_y][vars->new_x] != '1')
+        {
+            // distance_to_corner = fabs(data->player.pos_y - vars->curr_y);
+            // if (distance_to_corner > 0.15)
+            data->player.pos_x += move_x * 0.5;
+        }
+        // Try Y movement only if it doesn't put us too close to the wall
+    if (vars->new_y >= 0 && vars->new_y < data->map.rows && 
+        vars->curr_x >= 0 && vars->curr_x < vars->row_length_y && 
+        data->map.map[vars->new_y][vars->curr_x] != '1')
+        {
+            // distance_to_corner = fabs(data->player.pos_x - vars->curr_x);
+            // if (distance_to_corner > 0.15)  
+            data->player.pos_y += move_y * 0.5;
+        }
+}
+
+void move_player(t_data *data, double move_x, double move_y, t_cord vars)
+{
+    // int blocked;
+    int wall_ahead;
+    int wall_x;
+    int wall_y;
+
+    vars.new_x = (int)(data->player.pos_x + move_x);
+    vars.new_y = (int)(data->player.pos_y + move_y);
+    vars.curr_x = (int)data->player.pos_x;
+    vars.curr_y = (int)data->player.pos_y;
+    vars.row_length_y = (int)ft_strlen(data->map.map[vars.new_y]);
+    vars.row_length_cy = (int)ft_strlen(data->map.map[vars.curr_y]);
+    // blocked = (vars.new_y >= 0 && vars.new_y < data->map.rows && 
+    //     vars.new_x >= 0 && vars.new_x < vars.row_length_y &&
+    //     data->map.map[vars.new_y][vars.new_x] == '1');
+
+    // if (blocked)
+    //     diagonal_blocked(data, move_x, move_y, &vars);
+    // else
+    // {
+    //     if (vars.curr_y >= 0 && vars.curr_y < data->map.rows && vars.new_x >= 0 
+    //         && vars.new_x < vars.row_length_cy 
+    //         && data->map.map[vars.curr_y][vars.new_x] != '1')
+    //         data->player.pos_x += move_x;
+    //     if (vars.new_y >= 0 && vars.new_y < data->map.rows && vars.curr_x >= 0 
+    //         && vars.curr_x < vars.row_length_y 
+    //         && data->map.map[vars.new_y][vars.curr_x] != '1')
+    //         data->player.pos_y += move_y;
+    // }
+    wall_ahead = (vars.new_y >= 0 && vars.new_y < data->map.rows && 
+        vars.new_x >= 0 && vars.new_x < vars.row_length_y &&
+        data->map.map[vars.new_y][vars.new_x] == '1');
+
+    wall_x = (vars.curr_y >= 0 && vars.curr_y < data->map.rows && 
+        vars.new_x >= 0 && vars.new_x < vars.row_length_cy &&
+        data->map.map[vars.curr_y][vars.new_x] == '1');
+
+    wall_y = (vars.new_y >= 0 && vars.new_y < data->map.rows && 
+        vars.curr_x >= 0 && vars.curr_x < vars.row_length_y &&
+        data->map.map[vars.new_y][vars.curr_x] == '1');
+    if (wall_ahead && (!wall_x && !wall_y))
+    {
+        printf("Corner\n");
+        return;
+    }
+
+    if (!wall_x)
+        data->player.pos_x += move_x;
+    if (!wall_y)
+        data->player.pos_y += move_y;
+
+}
 
 void move_vertically(t_data *data, int direction)
 {
-    double new_x;
-    double new_y;
-    // int next_x;
-    // int next_y;
-    int curr_y;
-    int curr_x;
-    // double move;
-    curr_y = (int)data->player.pos_y;
-    curr_x = (int)data->player.pos_x;
-    // if(direction == MUP)
-    //     move = MOV_SPEED * 1;
-    // else
-    //     move = MOV_SPEED * -1;
-    // new_x = data->player.pos_x + data->player.dir_x * move;
-    // new_y = data->player.pos_y + data->player.dir_y * move;
+    t_cord vars;
+    double move_x;
+    double move_y;
 
-    // next_x = (int)new_x;
-    // next_y = (int)new_y;
-    // if (next_y >= 0 && next_y < data->map.rows &&
-    //     next_x >= 0 && next_x < (int)ft_strlen(data->map.map[next_y]) &&
-    //     data->map.map[next_y][next_x] != '1')
-    // {
-    //     data->player.pos_x = new_x;
-    //     data->player.pos_y = new_y;
-    // }
+    ft_bzero(&vars, sizeof(t_cord));
     if(direction == MUP)
     {
-        new_x = data->player.pos_x + data->player.dir_x * MOV_SPEED;
-        if(curr_y >= 0 && curr_y < data->map.rows && (int)new_x >= 0 && (int)new_x < (int)ft_strlen(data->map.map[curr_y]) && 
-            data->map.map[curr_y][(int)new_x] != '1')
-            data->player.pos_x = new_x;
-        new_y = data->player.pos_y + data->player.dir_y * MOV_SPEED;
-        if ((int)new_y >= 0 && (int)new_y < data->map.rows && curr_x >= 0 && curr_x < (int)ft_strlen(data->map.map[(int)new_y]) 
-            && data->map.map[(int)new_y][curr_x] != '1')
-            data->player.pos_y = new_y;
+        move_x = data->player.dir_x * MOV_SPEED;
+        move_y = data->player.dir_y * MOV_SPEED;
     }
     else
     {
-        new_x = data->player.pos_x - data->player.dir_x * MOV_SPEED;
-        if(curr_y >= 0 && curr_y < data->map.rows && (int)new_x >= 0 && (int)new_x < (int)ft_strlen(data->map.map[curr_y]) && 
-            data->map.map[curr_y][(int)new_x] != '1')
-            data->player.pos_x = new_x;
-        new_y = data->player.pos_y - data->player.dir_y * MOV_SPEED;
-        if ((int)new_y >= 0 && (int)new_y < data->map.rows && curr_x >= 0 && curr_x < (int)ft_strlen(data->map.map[(int)new_y]) 
-            && data->map.map[(int)new_y][curr_x] != '1')
-            data->player.pos_y = new_y;
+        move_x = -data->player.dir_x * MOV_SPEED;
+        move_y = -data->player.dir_y * MOV_SPEED;
     }
+    move_player(data, move_x, move_y, vars);
+
 }
-// might need to change the way of checking  maybe check if new x first with current y and then check if new y with current x
+
 void move_horizontally(t_data *data, int direction)
 {
-    double new_x;
-    double new_y;
-    int curr_y;
-    int curr_x;
-    // int next_y;
-    // int next_x;
-    // double move;
+    t_cord vars;
+    double move_x;
+    double move_y;
 
-    // if(direction == MLEFT)
-    //     move = MOV_SPEED * -1;
-    // else
-    //     move = MOV_SPEED * 1;
-    curr_y = (int)data->player.pos_y;
-    curr_x = (int)data->player.pos_x;
-    // new_x = data->player.pos_x + data->player.plane_x * move;
-    // new_y = data->player.pos_y + data->player.plane_y * move;
-    // next_x = (int)new_x;
-    // next_y = (int)new_y;
-    // if (next_y >= 0 && next_y < data->map.rows &&
-    //     next_x >= 0 && next_x < (int)ft_strlen(data->map.map[next_y]) &&
-    //     data->map.map[next_y][next_x] != '1')
-    // {
-    //     data->player.pos_x = new_x;
-    //     data->player.pos_y = new_y;
-    // }
+    ft_bzero(&vars, sizeof(t_cord));
     if (direction == MRIGHT)
     {
-        new_x = data->player.pos_x + data->player.plane_x * MOV_SPEED;
-        // if(data->map.map[curr_y][(int)new_x] != '1')
-        if (curr_y >= 0 && curr_y < data->map.rows &&
-            (int)new_x >= 0 && (int)new_x < (int)ft_strlen(data->map.map[curr_y]) &&
-            data->map.map[curr_y][(int)new_x] != '1')
-            data->player.pos_x = new_x;
-        new_y = data->player.pos_y + data->player.plane_y * MOV_SPEED;
-        // if (data->map.map[(int)new_y][curr_x] != '1')
-        if ((int)new_y >= 0 && (int)new_y < data->map.rows &&
-        curr_x >= 0 && curr_x < (int)ft_strlen(data->map.map[(int)new_y]) &&
-        data->map.map[(int)new_y][curr_x] != '1')
-            data->player.pos_y = new_y;
+        move_x = data->player.plane_x * MOV_SPEED;
+        move_y = data->player.plane_y * MOV_SPEED;
     }
     else
     {
-        new_x = data->player.pos_x - data->player.plane_x * MOV_SPEED;
-        // if(data->map.map[curr_y][(int)new_x] != '1')
-        if (curr_y >= 0 && curr_y < data->map.rows &&
-            (int)new_x >= 0 && (int)new_x < (int)ft_strlen(data->map.map[curr_y]) &&
-            data->map.map[curr_y][(int)new_x] != '1')
-            data->player.pos_x = new_x;
-        new_y = data->player.pos_y - data->player.plane_y * MOV_SPEED;    
-    //    if (data->map.map[(int)new_y][curr_x] != '1')
-        if ((int)new_y >= 0 && (int)new_y < data->map.rows &&
-        curr_x >= 0 && curr_x < (int)ft_strlen(data->map.map[(int)new_y]) &&
-        data->map.map[(int)new_y][curr_x] != '1')
-            data->player.pos_y = new_y;
-    }  
+        move_x = -data->player.plane_x * MOV_SPEED;
+        move_y = -data->player.plane_y * MOV_SPEED;
+    }
+    move_player(data, move_x, move_y, vars);
 }
+
 void rotate(t_player *pl, int direction)
 {
     double rot;

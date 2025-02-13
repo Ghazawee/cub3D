@@ -13,6 +13,8 @@ int handle_color(char **str)
 	if (!*str)
 		return (-1);
 	tmp = *str;
+	if(!*tmp) //if u have ,1,1/ 1, ,1 it was giving a valid number it counted the null as 0
+		return (free_str(str), -1);
 	while(tmp[i])
 	{
 		if(ft_isdigit(tmp[i]) == 0)
@@ -33,7 +35,9 @@ int parse_rgb(char *str)
 	int r;
 	int g;
 	int b;
-
+	
+	if (check_multiple_commas(str) == -1)
+		return (-1);
 	arr = ft_split(str, ',');
 	if(!arr)
 		return (-1);

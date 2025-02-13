@@ -37,8 +37,9 @@
 # define WIN_WIDTH 800
 # define WIN_HEIGHT 600
 # define TEX_SIZE 64
-# define MOV_SPEED 0.3
+# define MOV_SPEED 0.2
 # define ROT_SPEED 0.1
+# define COLLI_BUFF 0.1
 # define MLEFT 0
 # define MRIGHT 1
 # define MUP 1
@@ -57,6 +58,16 @@ typedef struct s_vars
     char   *tmp;
     char    *line;
 }t_vars;
+
+typedef struct s_cord
+{
+   int row_length_y;
+   int row_length_cy;
+   int new_x;
+   int new_y;
+   int curr_y;
+   int curr_x;
+}t_cord;
 
 typedef struct s_ray
 {
@@ -152,6 +163,7 @@ void    free_str(char **str);
 int	only_spaces(char *str);
 void init_vars(t_vars *vars);
 int err_msg(char *msg);
+int check_multiple_commas(char *str);
 //-----------------------par_elem----------------------//
 int store_elem(t_elements *elem, char *line);
 
@@ -172,4 +184,5 @@ int    render_frames(t_data *data);
 
 void draw_gmap(t_map *map, t_vars *v, t_data *data);
 void draw_player(t_player *player, t_vars *v, t_data *data);
+void    draw_walls(t_ray *ray, t_data *data, int i);
 #endif

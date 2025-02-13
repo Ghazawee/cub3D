@@ -13,7 +13,7 @@ OBJ = $(SRC:.c=.o)
 
 CC = cc
 
-CFLAGS = -Wall -Wextra -Werror -g3 -fsanitize=address
+CFLAGS = -Wall -Wextra -Werror -g3
 
 DEL = rm -f
 
@@ -52,7 +52,7 @@ $(MLX):
 
 $(NAME): $(OBJ)
 	@echo "$(CY)Building cub3D$(RC)"
-	@$(CC) -o $@ $^ $(LIBFT) $(MFLAGS) -fsanitize=address
+	@$(CC) -o $@ $^ $(LIBFT) $(MFLAGS)
 
 # $(NAME): $(OBJ)
 # @$(CC) -o $@ $^ $(LIBFT) -L$(MLX_DIR) -lmlx -framework OpenGL -framework AppKit

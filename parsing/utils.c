@@ -36,3 +36,19 @@ int err_msg(char *msg)
 		write(2, msg++, 1);
 	return (0);
 }
+int check_multiple_commas(char *str)
+{
+	int i;
+
+	i = 0;
+	while(str[i])
+	{
+		if(str[i] == ',')
+		{
+			if(!str[i + 1]  || (str[i +1] && str[i + 1] == ','))
+				return (-1);
+		}
+		i++;
+	}
+	return (0);
+}

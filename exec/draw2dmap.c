@@ -1,5 +1,6 @@
 #include "../cub3d.h"
 
+//remove this and player drawing useless and might mess later no minimap feature
 void draw_gmap(t_map *map, t_vars *v, t_data *data)
 {
     int tile_size;
@@ -66,5 +67,32 @@ void draw_player(t_player *player, t_vars *v, t_data *data)
             v->c++;
         }
         v->k++;
+    }
+}
+//i think for textures we use similar approach to draw them
+void    draw_walls(t_ray *ray, t_data *data, int i)
+{
+    int lineheight;
+    int drawstart;
+    int drawend;
+    int colour;
+
+    lineheight = (int)(WIN_HEIGHT / ray->perp_wall_dist);
+    drawstart = -lineheight / 2 + WIN_HEIGHT / 2;
+    if(drawstart < 0)
+        drawstart = 0;
+    drawend = lineheight / 2 + WIN_HEIGHT / 2;
+    if(drawend >= WIN_HEIGHT)
+        drawend = WIN_HEIGHT - 1;
+    if (data->map.map[ray->map_y][ray->map_x] == '1')
+        colour = 0x00FF00;
+    else
+        colour = 0xFF0000;
+    if (ray->side == 1)
+        colour = (colour & 0xfefefe) >> 1;
+    while(drawstart < drawend)
+    {
+        my_mlx_pixel_put(&data->image, i, drawstart, colour);
+        drawstart++;
     }
 }

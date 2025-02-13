@@ -78,6 +78,7 @@ void cast_rays(t_ray *ray, t_player *player, t_data *data)
             ray->perp_wall_dist = ray->side_dist_x - ray->delta_dist_x;
         else
             ray->perp_wall_dist = ray->side_dist_y - ray->delta_dist_y;
+        draw_walls(ray, data, i);
         //need to implement function to draw rayys as lines to visualize// later on start calculating distance to wall and stuff i think instead of drawing a line
         i++;
     }
@@ -90,10 +91,10 @@ int    render_frames(t_data *data)
     // mlx_clear_window(data->mlx.mlx, data->mlx.win);
     ft_bzero(data->image.addr, WIN_WIDTH * WIN_HEIGHT * (data->image.bpp / 8));
     init_vars(&vars);
-    draw_gmap(&data->map, &vars, data);
-    init_vars(&vars);
-    draw_player(&data->player, &vars, data);
-    //draw_grid_map(data);// need to implement to visualize,
+    // draw_gmap(&data->map, &vars, data);
+    // init_vars(&vars);
+    // draw_player(&data->player, &vars, data);
+    // draw_grid_map(data);// need to implement to visualize,
     cast_rays(&data->ray, &data->player, data);
     mlx_put_image_to_window(data->mlx.mlx, data->mlx.win, data->image.img, 0, 0);
     return(0);
