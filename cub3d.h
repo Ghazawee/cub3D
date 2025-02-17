@@ -69,6 +69,16 @@ typedef struct s_cord
    int curr_x;
 }t_cord;
 
+typedef struct s_draw
+{
+    int     draw_start;
+    int     draw_end;
+    int     tex_x;
+    int     tex_y;
+    double  step;
+    double  tex_pos;
+}t_draw;
+
 typedef struct s_ray
 {
     double camera_x;
@@ -85,6 +95,9 @@ typedef struct s_ray
     int step_y;
     int hit;
     int side;
+    double wallx;
+    int line_height;
+    int tex_num;
 }t_ray;
 
 typedef struct s_image
@@ -95,6 +108,18 @@ typedef struct s_image
     int line_len;
     int endian;
 }t_image;
+
+//idk if this enough??
+typedef struct s_tex
+{
+    void    *img;
+    char    *addr;
+    int     width;
+    int     height;
+    int     bpp;
+    int     line_len;
+    int     endian;
+}t_tex;
 
 typedef struct s_player
 {
@@ -144,6 +169,7 @@ typedef struct s_data
     t_player    player;
     t_image     image;
     t_ray       ray;
+    t_tex       texs[4];
 }t_data;
 
 void	fr_array(char **array);
@@ -184,5 +210,6 @@ int    render_frames(t_data *data);
 
 void draw_gmap(t_map *map, t_vars *v, t_data *data);
 void draw_player(t_player *player, t_vars *v, t_data *data);
+void colour_floor_ceil(t_data *data);
 void    draw_walls(t_ray *ray, t_data *data, int i);
 #endif

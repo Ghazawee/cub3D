@@ -59,14 +59,14 @@ void move_player(t_data *data, double move_x, double move_y, t_cord vars)
     //     diagonal_blocked(data, move_x, move_y, &vars);
     // else
     // {
-    //     if (vars.curr_y >= 0 && vars.curr_y < data->map.rows && vars.new_x >= 0 
-    //         && vars.new_x < vars.row_length_cy 
-    //         && data->map.map[vars.curr_y][vars.new_x] != '1')
-    //         data->player.pos_x += move_x;
-    //     if (vars.new_y >= 0 && vars.new_y < data->map.rows && vars.curr_x >= 0 
-    //         && vars.curr_x < vars.row_length_y 
-    //         && data->map.map[vars.new_y][vars.curr_x] != '1')
-    //         data->player.pos_y += move_y;
+        // if (vars.curr_y >= 0 && vars.curr_y < data->map.rows && vars.new_x >= 0 
+        //     && vars.new_x < vars.row_length_cy 
+        //     && data->map.map[vars.curr_y][vars.new_x] != '1')
+        //     data->player.pos_x += move_x;
+        // if (vars.new_y >= 0 && vars.new_y < data->map.rows && vars.curr_x >= 0 
+        //     && vars.curr_x < vars.row_length_y 
+        //     && data->map.map[vars.new_y][vars.curr_x] != '1')
+        //     data->player.pos_y += move_y;
     // }
     wall_ahead = (vars.new_y >= 0 && vars.new_y < data->map.rows && 
         vars.new_x >= 0 && vars.new_x < vars.row_length_y &&

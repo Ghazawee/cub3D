@@ -130,11 +130,12 @@ int	main(int ac, char **av)
 	}
 	printf("file: %s valid\n", av[1]);
 	init_data(&data);
-	if (!parse_elem_map(av[1], &data))
+	if (!parse_elem_map(av[1], &data)) // || load xpm function and if it fails free and exit cleanly save lines
 	{
 		free_data(&data);
 		return (1);
 	}
+	//load xpm to t_tex ?? if fail free and exit cleanly
 	init_start_game(&data);
 	free_data(&data);
 }
