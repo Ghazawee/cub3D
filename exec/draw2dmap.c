@@ -1,76 +1,27 @@
 #include "../cub3d.h"
 
-//remove this and player drawing useless and might mess later no minimap feature
-void draw_gmap(t_map *map, t_vars *v, t_data *data)
+void colour_floor_ceiling(t_data *data)
 {
-    int tile_size;
-    int colour;
-    t_image *img;
+    int x;
+    int y;
 
-    tile_size = 20;
-    img = &data->image;
-    while(v->i < map->rows)
+    y = 0;
+    while(y < WIN_HEIGHT)
     {
-        v->j = 0;
-        while(v->j < (int)ft_strlen(map->map[v->i]))
+        x = 0;
+        while(x < WIN_WIDTH)
         {
-            if(map->map[v->i][v->j] == '1' || map->map[v->i][v->j] == ' ')
-                colour = 0xFFFFFF;
+            if(y < WIN_HEIGHT / 2)
+                my_mlx_pixel_put(&data->image, x, y, data->elements.ceiling);
             else
-                colour = 0x000000;
-            v->k = 0;
-            while(v->k < tile_size)
-            {
-                v->c = 0;
-                while (v->c < tile_size)
-                {
-                    if(v->k == 0 || v->c == 0)
-                        my_mlx_pixel_put(img, v->j * tile_size + v->c, v->i * tile_size + v->k, 0x808080);
-                    else
-                        my_mlx_pixel_put(img, v->j * tile_size + v->c, v->i * tile_size + v->k, colour);
-                    v->c++;
-                }
-                v->k++;
-            }
-            v->j++;
+                my_mlx_pixel_put(&data->image, x, y, data->elements.floor);
+            x++;
         }
-        v->i++;
-    }
-}
-
-void draw_player(t_player *player, t_vars *v, t_data *data)
-{
-    int tile_size;
-    t_image *img;
-    int screen_x;
-    int screen_y;
-    int px;
-    int py;
-
-    init_vars(v);
-    tile_size = 20;
-    img = &data->image;
-
-    screen_y = (int)(player->pos_y * tile_size);
-    screen_x = (int)(player->pos_x * tile_size);
-    v->k = -3;
-    while(v->k <= 3)
-    {
-        v->c = -3;
-        while(v->c <= 3)
-        {
-            px = screen_x + v->c;
-            py = screen_y + v->k;
-            if(px >= 0 && px < WIN_WIDTH && py >= 0 && py < WIN_HEIGHT)
-                my_mlx_pixel_put(img, px, py, 0xFF0000);
-            // my_mlx_pixel_put(img, v->j + v->c, v->i + v->k, 0xFF0000);
-            v->c++;
-        }
-        v->k++;
+        y++;
     }
 }
 //i think for textures we use similar approach to draw them
-void    draw_walls(t_ray *ray, t_data *data, int i)
+void    draw_walls(t_ray *ray, t_data *data, int x)
 {
     int lineheight;
     int drawstart;
@@ -92,7 +43,7 @@ void    draw_walls(t_ray *ray, t_data *data, int i)
         colour = (colour & 0xfefefe) >> 1;
     while(drawstart < drawend)
     {
-        my_mlx_pixel_put(&data->image, i, drawstart, colour);
+        my_mlx_pixel_put(&data->image, x, drawstart, colour);
         drawstart++;
     }
 }

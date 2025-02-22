@@ -31,29 +31,30 @@ char    *read_file(char *file, t_vars *vars)
 
 int empty_line(char *str)
 {
-	// while(*str)
-	// {
-		if(*str == '\n')
-			str++;
-	// }
-	if (*str == '\0')
-		return (0);
-	return (1);
+	if(*str == '\n')
+		str++;
+	return (*str == '\0');
 }
 
 int	store_map(t_map *map, int start)
 {
 	int i;
 	int j;
+	int map_end;
 
+	map_end = 0;
 	i = start;
 	map->rows = 0;
 	while(map->cmap[i])
 	{
-		if(!empty_line(map->cmap[i]))
-			return (err_msg("Error: Empty line in map\n"));
+		if(empty_line(map->cmap[i]))
+			map_end = 1;
 		else
+		{
+			if(map_end)
+				return (err_msg("Error: Empty line in map\n"));
 			map->rows++;
+		}
 		i++;
 	}
 	if (map->rows == 0)
@@ -63,7 +64,7 @@ int	store_map(t_map *map, int start)
 		return (err_msg("Error: Malloc\n"));
 	i = start;
 	j = 0;
-	while(map->cmap[i])
+	while(map->cmap[i] && j < map->rows)
 	{
 		map->map[j] = ft_strtrim(map->cmap[i], "\n");
 		if(!map->map[j])

@@ -167,7 +167,7 @@ int	validate_map(t_map *map, t_data *data)
 		return (0);
 	calculate_map_rows(map);
 	calculate_map_cols(map);
-	if (!validate_map_walls(map, vars) || !validate_spaces(map) || !valid_zero_player(map)) // need to also check if 0 is closed by 1's like yousef said or stop validating spaces just validate 0 because it started giving invalid reads or do padding like tariq said
+	if (!validate_map_walls(map, vars) || !validate_spaces(map) || !valid_zero_player(map))
 		return (0);
 	return (1);
 }

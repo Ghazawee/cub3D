@@ -1,15 +1,15 @@
 #ifndef CUB3D_H
 # define CUB3D_H
 #include "libft/libft.h"
-// #include "mlx_mac/mlx.h"
-//#include "gnl/get_next_line.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include <fcntl.h>
 #include <math.h>
 #include <errno.h>
+#include <stdbool.h>
 #include <math.h>
+#include <sys/time.h>
 
 #if __APPLE__
 #include "mlx_mac/mlx.h"
@@ -34,11 +34,12 @@
     #define RIGHT_ARROW 65363
     #define LEFT_ARROW 65361
 #endif
+
 # define WIN_WIDTH 800
 # define WIN_HEIGHT 600
 # define TEX_SIZE 64
-# define MOV_SPEED 0.2
-# define ROT_SPEED 0.1
+# define MOV_SPEED 2.0
+# define ROT_SPEED 0.7
 # define COLLI_BUFF 0.1
 # define MLEFT 0
 # define MRIGHT 1
@@ -144,6 +145,9 @@ typedef struct s_data
     t_player    player;
     t_image     image;
     t_ray       ray;
+    double     delta_time;
+    struct timeval last;
+    bool        keys[7];
 }t_data;
 
 void	fr_array(char **array);
@@ -181,8 +185,9 @@ void calculate_map_rows(t_map *map);
 int key_events(int keycode, t_data *data);
 int exit_window(t_data *data);
 int    render_frames(t_data *data);
-
-void draw_gmap(t_map *map, t_vars *v, t_data *data);
-void draw_player(t_player *player, t_vars *v, t_data *data);
+void move_horizontally(t_data *data, int direction);
+void move_vertically(t_data *data, int direction);
+void rotate(t_player *pl, int direction, t_data *data);
 void    draw_walls(t_ray *ray, t_data *data, int i);
+void colour_floor_ceiling(t_data *data);
 #endif
