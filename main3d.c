@@ -133,7 +133,7 @@ void init_texture(t_data *data)
 {
 	printf("%s\n", data->elements.no);
 	data->texture.no.img = mlx_xpm_file_to_image(data->mlx.mlx, data->elements.no, &data->texture.no.width, &data->texture.no.height);
-	abort();
+	// abort();
 	if (data->texture.no.img == NULL)
 	{
 		write(2, "Error: mlx_xpm_file_to_image failed\n", 36);
@@ -152,8 +152,8 @@ void init_texture(t_data *data)
 void	init_start_game(t_data *data)
 {
 	gettimeofday(&data->last, NULL);
-	init_texture(data);
 	data->mlx.mlx = mlx_init();
+	init_texture(data);
 	if (!data->mlx.mlx)
 	{
 		write(2, "Error: mlx_init failed\n", 24);
