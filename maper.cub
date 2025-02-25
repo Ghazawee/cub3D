@@ -1,7 +1,7 @@
 NO      textures/Prototype_Textures/Orange.xpm
-SO      ./path_to_the_south_texture
-EA      ./path_to_the_east_texture
-WE      ./path_to_the_west_texture                     
+SO      textures/Prototype_Textures/Orange.xpm
+EA      textures/Prototype_Textures/Orange.xpm
+WE      textures/Prototype_Textures/Orange.xpm                     
 
 
 F 220,100,100 

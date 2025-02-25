@@ -13,13 +13,17 @@
 //     return (*(int *)(addr + (drawstart * data->image.line_len) + (x * (data->image.bpp / 8))));
 // }
 
-int get_pixel_colour(t_textures *texture, int x, int y)
+int get_pixel_colour(t_textures *texture, int x, int y, t_ray *ray)
 {
-    if (x < 0 || x >= texture->no.width || y < 0 || y >= texture->no.height)
-        return (0x000000); // Return black if out of bounds
 
-    int offset = (y * texture->no.line_len) + (x * (texture->no.bpp / 8));
-    return (*(int *)(texture->no.addr + offset));
+    // if (x < 0 || x >= texture->no.width || y < 0 || y >= texture->no.height)
+    //     return (0x000000); // Return black if out of bounds
+    if ((ray->side == 1 && ray->ray_dir_y < 0))
+    {
+        int offset = (y * texture->no.line_len) + (x * (texture->no.bpp / 8));
+        return (*(int *)(texture->no.addr + offset));
+    }
+    return (0x000000);
 }
 
 void colour_floor_ceiling(t_data *data)
@@ -58,14 +62,14 @@ void    draw_walls(t_ray *ray, t_data *data, int x)
     if(drawend >= WIN_HEIGHT)
         drawend = WIN_HEIGHT - 1;
     if (data->map.map[ray->map_y][ray->map_x] == '1')
-        colour = 0x00FF00;
+        colour = get_pixel_colour(&data->texture, x, drawstart, ray);
     else
-        colour = 0xFF0000;
+        colour = get_pixel_colour(&data->texture, x, drawstart, ray);
     if ((ray->side == 1 && ray->ray_dir_y < 0) || (ray->side == 0 && ray->ray_dir_x > 0))
         colour = (colour & 0xfefefe) >> 1;
     while(drawstart < drawend)
     {
-        my_mlx_pixel_put(&data->image, x, drawstart, get_pixel_colour(&data->texture, x, drawstart));
+        my_mlx_pixel_put(&data->image, x, drawstart, colour);
         drawstart++;
     }
 }
