@@ -8,7 +8,7 @@ int	exit_window(t_data *data)
 		mlx_destroy_window(data->mlx.mlx, data->mlx.win);
 	if (data->mlx.mlx)
 	{
-		mlx_destroy_display(data->mlx.mlx); // needed for linux
+		// mlx_destroy_display(data->mlx.mlx); // needed for linux
 		free(data->mlx.mlx);
 	}
 	free_data(data);
@@ -39,9 +39,9 @@ void	move_player(t_data *data, double move_x, double move_y, t_cord vars)
 	if (wall_ahead && (!wall_x && !wall_y))
 		return ;
 	if (!wall_x)
-		data->player.pos_x += move_x;
+		printf("player bef X: %f -----------", data->player.pos_x),data->player.pos_x += move_x, printf("player after X: %f\n", data->player.pos_x);
 	if (!wall_y)
-		data->player.pos_y += move_y;
+		printf("player bef Y: %f -----------", data->player.pos_y),data->player.pos_y += move_y, printf("player after Y: %f\n", data->player.pos_y);
 }
 
 void	move_vertically(t_data *data, int direction)

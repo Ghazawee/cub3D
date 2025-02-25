@@ -1,5 +1,27 @@
 #include "../cub3d.h"
 
+// int  get_pixel_colour(t_data *data, int x, int drawstart)
+// {
+//     int height;
+//     int width;
+//     void *texture;
+//     char *addr;
+//     texture = mlx_xpm_file_to_image(data->mlx.mlx, data->elements.no, &width, &height);
+//     addr = mlx_get_data_addr(texture, &data->image.bpp, &data->image.line_len, &data->image.endian);
+//     printf("pixel colour  ----  %d\n", *(int *)(addr + (drawstart * data->image.line_len) + (x * (data->image.bpp / 8))));
+//     // *(int *)(tex_data + (y * size_line) + (x * (bpp / 8)));
+//     return (*(int *)(addr + (drawstart * data->image.line_len) + (x * (data->image.bpp / 8))));
+// }
+
+int get_pixel_colour(t_textures *texture, int x, int y)
+{
+    if (x < 0 || x >= texture->no.width || y < 0 || y >= texture->no.height)
+        return (0x000000); // Return black if out of bounds
+
+    int offset = (y * texture->no.line_len) + (x * (texture->no.bpp / 8));
+    return (*(int *)(texture->no.addr + offset));
+}
+
 void colour_floor_ceiling(t_data *data)
 {
     int x;
@@ -39,11 +61,11 @@ void    draw_walls(t_ray *ray, t_data *data, int x)
         colour = 0x00FF00;
     else
         colour = 0xFF0000;
-    if (ray->side == 1)
+    if ((ray->side == 1 && ray->ray_dir_y < 0) || (ray->side == 0 && ray->ray_dir_x > 0))
         colour = (colour & 0xfefefe) >> 1;
     while(drawstart < drawend)
     {
-        my_mlx_pixel_put(&data->image, x, drawstart, colour);
+        my_mlx_pixel_put(&data->image, x, drawstart, get_pixel_colour(&data->texture, x, drawstart));
         drawstart++;
     }
 }

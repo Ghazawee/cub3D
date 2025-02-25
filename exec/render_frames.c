@@ -44,7 +44,7 @@ void init_step_side(t_ray *ray, t_player *player, t_data *data)
     }
     if (ray->ray_dir_y < 0)
     {
-        ray->step_y = -1;
+        ray->step_y = -1; 
         ray->side_dist_y = (player->pos_y - ray->map_y) * ray->delta_dist_y;
     }
     else
@@ -64,8 +64,8 @@ void cast_rays(t_ray *ray, t_player *player, t_data *data)
     while(x < WIN_WIDTH) // might change to < 30 or something smaller for performance, the more rays the higher resolution but at cost of performance// for visualizing i think low res is fine because its a 2d map
     {
         ray->camera_x = (2 * x / (double)WIN_WIDTH) - 1; //spreads rays evenly in our fov from left to right/ -1 to 1 
-        ray->ray_dir_x = player->dir_x + player->plane_x * ray->camera_x;
-        ray->ray_dir_y = player->dir_y + player->plane_y * ray->camera_x;
+        ray->ray_dir_x = player->dir_x + (player->plane_x * ray->camera_x);
+        ray->ray_dir_y = player->dir_y + (player->plane_y * ray->camera_x);
         ray->map_x = (int)player->pos_x;
         ray->map_y = (int)player->pos_y;
         ray->delta_dist_x = fabs(1 / ray->ray_dir_x); // distance to next x grid line, 1 / ray_dir_x because we're just moving one block at a time

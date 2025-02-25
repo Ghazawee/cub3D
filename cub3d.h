@@ -95,6 +95,8 @@ typedef struct s_image
     int bpp;
     int line_len;
     int endian;
+    int width;
+    int height;
 }t_image;
 
 typedef struct s_player
@@ -137,6 +139,14 @@ typedef struct s_mlx
     t_image img;
 }t_mlx;
 
+typedef struct s_textures
+{
+    t_image no;
+    t_image so;
+    t_image we;
+    t_image ea;
+}t_textures;
+
 typedef struct s_data
 {
     t_elements  elements;
@@ -145,6 +155,7 @@ typedef struct s_data
     t_player    player;
     t_image     image;
     t_ray       ray;
+    t_textures   texture;
     double     delta_time;
     struct timeval last;
     bool        keys[7];
