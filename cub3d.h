@@ -52,11 +52,6 @@ typedef struct s_vars
     int		i;
     int		j;
     int     k;
-    int     c;
-    int     fd;
-    int     ret;
-    char   *tmp;
-    char    *line;
 }t_vars;
 
 typedef struct s_cord
@@ -196,10 +191,15 @@ int store_elem(t_elements *elem, char *line);
 //----------------------validate_map----------------------//
 int	validate_map(t_map *map, t_data *data);
 
+//----------------------tex_map_utils----------------------//
+int	copy_map(t_map *map, int start);
+int assign_tex(char **tex, char *trim);
 //----------------------map_utils----------------------//
 int top_bot_row(char *line);
 void calculate_map_rows(t_map *map);
-
+int	validate_map_walls(t_map *map, t_vars vars);
+int	validate_map_chars(t_map *map, t_vars vars);
+int	empty_line(char *str);
 //------------------------------------------------------//
 //-----------------------Execution-----------------------//
 //------------------------------------------------------//

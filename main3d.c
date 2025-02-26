@@ -107,7 +107,7 @@ void	init_start_game(t_data *data)
 	data->image.img = mlx_new_image(data->mlx.mlx, WIN_WIDTH, WIN_HEIGHT);
 	data->image.addr = mlx_get_data_addr(data->image.img, &data->image.bpp, &data->image.line_len, &data->image.endian);
 	init_player(data);
-	mlx_hook(data->mlx.win, 2, 1L << 0, key_events, data);
+	mlx_hook(data->mlx.win, 2, 0, key_events, data);
 	mlx_hook(data->mlx.win, 17, 0, exit_window, data);
 	// mlx_loop(data->mlx.mlx);
 	mlx_loop_hook(data->mlx.mlx, render_frames, data);
