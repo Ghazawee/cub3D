@@ -7,7 +7,10 @@ int exit_window(t_data *data)
     if(data->mlx.win)
         mlx_destroy_window(data->mlx.mlx, data->mlx.win);
     if(data->mlx.mlx)
+    {
+        mlx_destroy_display(data->mlx.mlx);
         free(data->mlx.mlx);
+    }
     free_data(data);
     exit(0);
 }

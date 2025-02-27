@@ -53,6 +53,7 @@ void	init_data(t_data *data)
 	ft_bzero(&data->player, sizeof(t_player));
 	ft_bzero(&data->ray, sizeof(t_ray));
 	ft_bzero(&data->image, sizeof(t_image));
+	ft_bzero(&data->texture, sizeof(t_textures));
 }
 void my_mlx_pixel_put(t_image *img, int x, int y, int color)
 {
@@ -88,6 +89,58 @@ void	init_player(t_data *data)
 	}
 }
 
+void destroy_images(t_data *data)
+{
+	if (data->texture.no.img)
+		mlx_destroy_image(data->mlx.mlx, data->texture.no.img);
+	if (data->texture.so.img)
+		mlx_destroy_image(data->mlx.mlx, data->texture.so.img);
+	if (data->texture.we.img)
+		mlx_destroy_image(data->mlx.mlx, data->texture.we.img);
+	if (data->texture.ea.img)
+		mlx_destroy_image(data->mlx.mlx, data->texture.ea.img);
+}
+int check_xpms(char *file, t_data *data)
+{
+	int fd;
+	
+	fd = open(file, O_RDONLY | O_NOFOLLOW);
+	if (fd == -1)
+	{
+		write(2, "Error: File not found\n", 23);
+		free_data(data);
+		close(fd);
+		exit(1);
+	}
+	close(fd);
+}
+
+int init_texture(t_data *data)
+{
+	check_xpms(data->elements.no, data);
+	check_xpms(data->elements.so, data);
+	check_xpms(data->elements.we, data);
+	check_xpms(data->elements.ea, data);
+	data->texture.no.img = mlx_xpm_file_to_image(data->mlx.mlx, data->elements.no, &data->texture.no.width, &data->texture.no.height);
+	data->texture.so.img = mlx_xpm_file_to_image(data->mlx.mlx, data->elements.so, &data->texture.so.width, &data->texture.so.height);
+	data->texture.we.img = mlx_xpm_file_to_image(data->mlx.mlx, data->elements.we, &data->texture.we.width, &data->texture.we.height);
+	data->texture.ea.img = mlx_xpm_file_to_image(data->mlx.mlx, data->elements.ea, &data->texture.ea.width, &data->texture.ea.height);
+	if (data->texture.no.img == NULL || data->texture.so.img == NULL || data->texture.we.img == NULL || data->texture.ea.img == NULL)
+	{
+		write(2, "Error: mlx_xpm_file_to_image failed\n", 36);
+		destroy_images(data);
+		mlx_destroy_display(data->mlx.mlx);
+		free(data->mlx.mlx);
+		free_data(data);
+		exit(1);
+	}
+	data->texture.no.addr = mlx_get_data_addr(data->texture.no.img, &data->texture.no.bpp, &data->texture.no.line_len, &data->texture.no.endian);
+	data->texture.so.addr = mlx_get_data_addr(data->texture.so.img, &data->texture.so.bpp, &data->texture.so.line_len, &data->texture.so.endian);
+	data->texture.we.addr = mlx_get_data_addr(data->texture.we.img, &data->texture.we.bpp, &data->texture.we.line_len, &data->texture.we.endian);
+	data->texture.ea.addr = mlx_get_data_addr(data->texture.ea.img, &data->texture.ea.bpp, &data->texture.ea.line_len, &data->texture.ea.endian);
+	return (0);
+}
+
 void	init_start_game(t_data *data)
 {
 	data->mlx.mlx = mlx_init();
@@ -97,6 +150,7 @@ void	init_start_game(t_data *data)
 		free_data(data);
 		exit(1);
 	}
+	init_texture(data);
 	data->mlx.win = mlx_new_window(data->mlx.mlx, WIN_WIDTH, WIN_HEIGHT, "cub3D");
 	if (!data->mlx.win)
 	{
@@ -107,7 +161,7 @@ void	init_start_game(t_data *data)
 	data->image.img = mlx_new_image(data->mlx.mlx, WIN_WIDTH, WIN_HEIGHT);
 	data->image.addr = mlx_get_data_addr(data->image.img, &data->image.bpp, &data->image.line_len, &data->image.endian);
 	init_player(data);
-	mlx_hook(data->mlx.win, 2, 0, key_events, data);
+	mlx_hook(data->mlx.win, 2, 1L << 0, key_events, data);
 	mlx_hook(data->mlx.win, 17, 0, exit_window, data);
 	// mlx_loop(data->mlx.mlx);
 	mlx_loop_hook(data->mlx.mlx, render_frames, data);

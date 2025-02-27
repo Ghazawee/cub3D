@@ -6,14 +6,14 @@ EXE = exec
 SRC = main3d.c $(PAR)/parse.c $(PAR)/validate_map.c $(PAR)/tex_map_utils.c\
 		get_next_line/get_next_line.c $(PAR)/map_utils.c $(PAR)/par_elem.c\
 		$(PAR)/utils.c $(EXE)/handle_actions.c $(EXE)/render_frames.c\
-		$(EXE)/draw2dmap.c
+		$(EXE)/draw2dmap.c error_exit.c
 
 
 OBJ = $(SRC:.c=.o)
 
-CC = cc
+CC = clang-19
 
-CFLAGS = -Wall -Wextra -Werror -g3 -fsanitize=address
+CFLAGS = -Wall -Wextra -Werror -g3 -fsanitize=address,undefined,integer
 
 DEL = rm -f
 
@@ -52,7 +52,7 @@ $(MLX):
 
 $(NAME): $(OBJ)
 	@echo "$(CY)Building cub3D$(RC)"
-	@$(CC) -o $@ $^ $(LIBFT) $(MFLAGS) -fsanitize=address
+	@$(CC) -o $@ $^ $(LIBFT) $(MFLAGS) -fsanitize=address,undefined,integer
 
 # $(NAME): $(OBJ)
 # @$(CC) -o $@ $^ $(LIBFT) -L$(MLX_DIR) -lmlx -framework OpenGL -framework AppKit

@@ -77,7 +77,7 @@ int	store_tex(t_elements *elem, char *trim, char **arr)
 		return (assign_tex(&elem->we, trim));
 	else if (ft_strncmp(arr[0], "EA", 3) == 0)
 		return (assign_tex(&elem->ea, trim));
-	return (0);
+	return (1);
 }
 
 int	handle_tex(t_elements *elem, char *trim, char **arr)

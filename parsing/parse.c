@@ -27,21 +27,23 @@ int	store_map(t_map *map, int start)
 		else
 		{
 			if (map_end)
-				return (err_msg("Error: Empty line in map\n"));
-			map->rows++;
+			{
+				if (only_spaces(map->cmap[i]))
+					return (err_msg("Error: Empty line in map\n"));
+			}
+			else
+				map->rows++;
 		}
 		i++;
 	}
 	if (map->rows == 0)
 		return (err_msg("Error: Empty map\n"));
-	map->map = ft_calloc(map->rows + 1, sizeof(char *));
-	if (!map->map)
-		return (err_msg("Error: Malloc\n"));
 	return (copy_map(map, start));
 }
 
 int	parse_elements(t_elements *elem, t_map *map, t_vars *vars)
 {
+	init_vars(vars);
 	while (map->cmap[vars->i] && elem->all_parsed < 6)
 	{
 		if (only_spaces(map->cmap[vars->i]))
@@ -68,9 +70,9 @@ int	get_file_size(char *file)
 	char	*line;
 	int		size;
 
-	fd = open(file, O_RDONLY);
+	fd = open(file, O_RDONLY | O_NOFOLLOW);
 	if (fd == -1)
-		return (0);
+		return (-2);
 	size = 0;
 	line = get_next_line(fd);
 	while (line)
@@ -88,7 +90,8 @@ int	read_file_array(char *file, t_map *map, t_vars var)
 	int		fd;
 	char	*line;
 
-	fd = open(file, O_RDONLY);
+	init_vars(&var);
+	fd = open(file, O_RDONLY | O_NOFOLLOW);
 	if (fd == -1)
 		return (0);
 	line = get_next_line(fd);
@@ -109,19 +112,22 @@ int	parse_elem_map(char *file, t_data *data)
 	t_elements	*elements;
 	t_vars		vars;
 	int			size;
+	int			check;
 
 	init_vars(&vars);
 	map = &data->map;
 	elements = &data->elements;
+	check = check_file(file);
+	if (check == 0 || check == -2 || check == -1)
+		return (file_error(check));
 	size = get_file_size(file);
-	if (size <= 0)
-		return (err_msg("Error: File not found||Empty\n"));
+	if (size == 0 || size == -2 || size == -1)
+		return (file_error(size));
 	map->cmap = ft_calloc(size + 1, sizeof(char *));
 	if (!map->cmap)
 		return (err_msg("Error: Malloc\n"));
 	if (!read_file_array(file, map, vars))
 		return (err_msg("Error: Malloc\n"));
-	init_vars(&vars);
 	if (!parse_elements(elements, map, &vars))
 		return (0);
 	if (!validate_map(map, data))

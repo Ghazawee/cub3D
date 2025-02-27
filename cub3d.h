@@ -46,6 +46,8 @@
 # define MDOWN 0
 # define R_ROTATE 1
 # define L_ROTATE 0
+# define MAX_SIZE 2000
+# define MAX_BYTES (100 * 1024)
 
 typedef struct s_vars
 {
@@ -102,6 +104,8 @@ typedef struct s_image
     int bpp;
     int line_len;
     int endian;
+    int width;
+    int height;
 }t_image;
 
 //idk if this enough??
@@ -156,6 +160,14 @@ typedef struct s_mlx
     t_image img;
 }t_mlx;
 
+typedef struct s_textures
+{
+    t_image no;
+    t_image so;
+    t_image we;
+    t_image ea;
+}t_textures;
+
 typedef struct s_data
 {
     t_elements  elements;
@@ -164,7 +176,7 @@ typedef struct s_data
     t_player    player;
     t_image     image;
     t_ray       ray;
-    t_tex       texs[4];
+    t_textures  texture;
 }t_data;
 
 void	fr_array(char **array);
@@ -173,7 +185,7 @@ int	validate_map(t_map *map, t_data *data);
 int err_msg(char *msg);
 char	*get_next_line(int fd);
 void my_mlx_pixel_put(t_image *img, int x, int y, int color);
-
+int file_error(int id);
 //------------------------------------------------------//
 //-----------------------Parsing-----------------------//
 //------------------------------------------------------//
@@ -194,6 +206,7 @@ int	validate_map(t_map *map, t_data *data);
 //----------------------tex_map_utils----------------------//
 int	copy_map(t_map *map, int start);
 int assign_tex(char **tex, char *trim);
+int	check_file(char *file);
 //----------------------map_utils----------------------//
 int top_bot_row(char *line);
 void calculate_map_rows(t_map *map);
@@ -208,8 +221,7 @@ int key_events(int keycode, t_data *data);
 int exit_window(t_data *data);
 int    render_frames(t_data *data);
 
-void draw_gmap(t_map *map, t_vars *v, t_data *data);
-void draw_player(t_player *player, t_vars *v, t_data *data);
+
 void colour_floor_ceil(t_data *data);
 void    draw_walls(t_ray *ray, t_data *data, int i);
 #endif
