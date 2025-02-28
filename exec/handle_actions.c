@@ -2,6 +2,7 @@
 
 int exit_window(t_data *data)
 {
+    destroy_imgs(data);
     if(data->image.img)
         mlx_destroy_image(data->mlx.mlx, data->image.img);
     if(data->mlx.win)
@@ -49,16 +50,16 @@ void move_vertically(t_data *data, int direction)
     double move_y;
 
     ft_bzero(&vars, sizeof(t_cord));
-    if(direction == MUP)
-    {
-        move_x = data->player.dir_x * MOV_SPEED;
-        move_y = data->player.dir_y * MOV_SPEED;
-    }
-    else
-    {
-        move_x = -data->player.dir_x * MOV_SPEED;
-        move_y = -data->player.dir_y * MOV_SPEED;
-    }
+    if (direction == MUP)
+	{
+		move_x = data->player.dir_x * (MOV_SPEED * data->delta_time);
+		move_y = data->player.dir_y * (MOV_SPEED * data->delta_time);
+	}
+	else
+	{
+		move_x = -data->player.dir_x * (MOV_SPEED * data->delta_time);
+		move_y = -data->player.dir_y * (MOV_SPEED * data->delta_time);
+	}
     move_player(data, move_x, move_y, vars);
 }
 
@@ -70,19 +71,19 @@ void move_horizontally(t_data *data, int direction)
 
     ft_bzero(&vars, sizeof(t_cord));
     if (direction == MRIGHT)
-    {
-        move_x = data->player.plane_x * MOV_SPEED;
-        move_y = data->player.plane_y * MOV_SPEED;
-    }
-    else
-    {
-        move_x = -data->player.plane_x * MOV_SPEED;
-        move_y = -data->player.plane_y * MOV_SPEED;
-    }
+	{
+		move_x = data->player.plane_x * (MOV_SPEED * data->delta_time);
+		move_y = data->player.plane_y * (MOV_SPEED * data->delta_time);
+	}
+	else
+	{
+		move_x = -data->player.plane_x * (MOV_SPEED * data->delta_time);
+		move_y = -data->player.plane_y * (MOV_SPEED * data->delta_time);
+	}
     move_player(data, move_x, move_y, vars);
 }
 
-void rotate(t_player *pl, int direction)
+void rotate(t_player *pl, int direction, t_data *data)
 {
     double rot;
     double old_dir_x;
@@ -90,18 +91,18 @@ void rotate(t_player *pl, int direction)
     double cos_rot;
     double sin_rot;
     
-    if(direction == R_ROTATE)
-        rot = ROT_SPEED;
-    else
-        rot = -ROT_SPEED;
-    cos_rot = cos(rot);
-    sin_rot = sin(rot);
-    old_dir_x = pl->dir_x;
-    pl->dir_x = pl->dir_x * cos_rot - pl->dir_y * sin_rot;
-    pl->dir_y = old_dir_x * sin_rot + pl->dir_y * cos_rot;
-    old_plane_x = pl->plane_x;
-    pl->plane_x = pl->plane_x * cos_rot - pl->plane_y * sin_rot;
-    pl->plane_y = old_plane_x * sin_rot + pl->plane_y * cos_rot;
+    if (direction == R_ROTATE)
+    rot = ROT_SPEED * data->delta_time;
+else
+    rot = -ROT_SPEED * data->delta_time;
+cos_rot = cos(rot);
+sin_rot = sin(rot);
+old_dir_x = pl->dir_x;
+pl->dir_x = pl->dir_x * cos_rot - pl->dir_y * sin_rot;
+pl->dir_y = old_dir_x * sin_rot + pl->dir_y * cos_rot;
+old_plane_x = pl->plane_x;
+pl->plane_x = pl->plane_x * cos_rot - pl->plane_y * sin_rot;
+pl->plane_y = old_plane_x * sin_rot + pl->plane_y * cos_rot;
 }
 
 int key_events(int keycode, t_data *data)
@@ -117,8 +118,8 @@ int key_events(int keycode, t_data *data)
     if (keycode == D_KEY)
         move_horizontally(data, MRIGHT);
     if (keycode == LEFT_ARROW)
-        rotate(&data->player, L_ROTATE);
+        rotate(&data->player, L_ROTATE, data);
     if (keycode == RIGHT_ARROW)
-        rotate(&data->player, R_ROTATE);
+        rotate(&data->player, R_ROTATE, data);
     return(0);
 }

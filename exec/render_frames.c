@@ -55,9 +55,9 @@ void init_step_side(t_ray *ray, t_player *player, t_data *data)
 }
 
 
-void init_ray_delta(t_ray *ray, t_player *player, int i)
+void init_ray_delta(t_ray *ray, t_player *player, int x)
 {
-    ray->camera_x = (2 * i / (double)WIN_WIDTH) - 1; //spreads rays evenly in our fov from left to right/ -1 to 1 
+    ray->camera_x = (2 * x / (double)WIN_WIDTH) - 1; //spreads rays evenly in our fov from left to right/ -1 to 1 
     ray->ray_dir_x = player->dir_x + player->plane_x * ray->camera_x;
     ray->ray_dir_y = player->dir_y + player->plane_y * ray->camera_x;
     ray->map_x = (int)player->pos_x;
@@ -70,12 +70,12 @@ void init_ray_delta(t_ray *ray, t_player *player, int i)
 
 void cast_rays(t_ray *ray, t_player *player, t_data *data)
 {
-    int i;
+    int x;
 
-    i = 0;
-    while(i < WIN_WIDTH) // might change to < 30 or something smaller for performance, the more rays the higher resolution but at cost of performance// for visualizing i think low res is fine because its a 2d map
+    x = 0;
+    while(x < WIN_WIDTH) // might change to < 30 or something smaller for performance, the more rays the higher resolution but at cost of performance// for visualizing i think low res is fine because its a 2d map
     {
-        init_ray_delta(ray, player, i);
+        init_ray_delta(ray, player, x);
         init_step_side(ray, player, data);
         dda_algo(ray, data);
         if(ray->side == 0)
@@ -87,22 +87,31 @@ void cast_rays(t_ray *ray, t_player *player, t_data *data)
         if(ray->side == 1)
             ray->wallx = player->pos_x + ray->perp_wall_dist * ray->ray_dir_x;
         ray->wallx -= floor(ray->wallx);
-        draw_walls(ray, data, i);
-        i++;
+        draw_walls(ray, data, x);
+        x++;
     }
 }
 
 int    render_frames(t_data *data)
 {
-    t_vars vars;
+    struct timeval current;
 
-    // mlx_clear_window(data->mlx.mlx, data->mlx.win);
     ft_bzero(data->image.addr, WIN_WIDTH * WIN_HEIGHT * (data->image.bpp / 8));
-    init_vars(&vars);
-    // draw_gmap(&data->map, &vars, data);
-    // init_vars(&vars);
-    // draw_player(&data->player, &vars, data);
-    // draw_grid_map(data);// need to implement to visualize,
+    gettimeofday(&current, NULL);
+    data->delta_time = (current.tv_sec - data->last.tv_sec) + (current.tv_usec - data->last.tv_usec)* 1e-6;
+    data->last = current;
+    if(data->keys[0])
+        move_vertically(data, MUP);
+    if(data->keys[1])
+        move_vertically(data, MDOWN);
+    if(data->keys[2])
+        move_horizontally(data, MLEFT);
+    if(data->keys[3])
+        move_horizontally(data, MRIGHT);
+    if(data->keys[4])
+        rotate(&data->player, L_ROTATE, data);
+    if(data->keys[5])
+        rotate(&data->player, R_ROTATE, data);
     colour_floor_ceil(data);
     cast_rays(&data->ray, &data->player, data);
     mlx_put_image_to_window(data->mlx.mlx, data->mlx.win, data->image.img, 0, 0);

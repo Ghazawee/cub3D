@@ -6,7 +6,7 @@
 /*   By: mshaheen <mshaheen@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/26 21:43:13 by mshaheen          #+#    #+#             */
-/*   Updated: 2025/02/26 21:43:14 by mshaheen         ###   ########.fr       */
+/*   Updated: 2025/03/01 02:56:13 by mshaheen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,7 +77,7 @@ int	store_tex(t_elements *elem, char *trim, char **arr)
 		return (assign_tex(&elem->we, trim));
 	else if (ft_strncmp(arr[0], "EA", 3) == 0)
 		return (assign_tex(&elem->ea, trim));
-	return (0);
+	return (1);
 }
 
 int	handle_tex(t_elements *elem, char *trim, char **arr)

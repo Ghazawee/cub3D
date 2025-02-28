@@ -53,6 +53,8 @@ void	init_data(t_data *data)
 	ft_bzero(&data->player, sizeof(t_player));
 	ft_bzero(&data->ray, sizeof(t_ray));
 	ft_bzero(&data->image, sizeof(t_image));
+	ft_bzero(&data->texture, sizeof(t_textures));
+	ft_bzero(data->keys, 7);
 }
 void my_mlx_pixel_put(t_image *img, int x, int y, int color)
 {
@@ -88,8 +90,45 @@ void	init_player(t_data *data)
 	}
 }
 
+int key_press(int keycode, t_data *data)
+{
+	if (keycode == W_KEY)
+		data->keys[0] = 1;
+	if (keycode == S_KEY)
+		data->keys[1] = 1;
+	if (keycode == A_KEY)
+		data->keys[2] = 1;
+	if (keycode == D_KEY)
+		data->keys[3] = 1;
+	if (keycode == LEFT_ARROW)
+		data->keys[4] = 1;
+	if (keycode == RIGHT_ARROW)
+		data->keys[5] = 1;
+	if (keycode == ESC_KEY)
+		exit_window(data);
+	return (0);
+}
+int key_release(int keycode, t_data *data)
+{
+	if (keycode == W_KEY)
+		data->keys[0] = 0;
+	if (keycode == S_KEY)
+		data->keys[1] = 0;
+	if (keycode == A_KEY)
+		data->keys[2] = 0;
+	if (keycode == D_KEY)
+		data->keys[3] = 0;
+	if (keycode == LEFT_ARROW)
+		data->keys[4] = 0;
+	if (keycode == RIGHT_ARROW)
+		data->keys[5] = 0;
+	return (0);
+}
+
+
 void	init_start_game(t_data *data)
 {
+	gettimeofday(&data->last, NULL);
 	data->mlx.mlx = mlx_init();
 	if (!data->mlx.mlx)
 	{
@@ -107,7 +146,9 @@ void	init_start_game(t_data *data)
 	data->image.img = mlx_new_image(data->mlx.mlx, WIN_WIDTH, WIN_HEIGHT);
 	data->image.addr = mlx_get_data_addr(data->image.img, &data->image.bpp, &data->image.line_len, &data->image.endian);
 	init_player(data);
-	mlx_hook(data->mlx.win, 2, 0, key_events, data);
+	// mlx_hook(data->mlx.win, 2, 0, key_events, data);
+	mlx_hook(data->mlx.win, 2, 1L << 0, key_press, data);
+	mlx_hook(data->mlx.win, 3, 1L << 1, key_release, data);
 	mlx_hook(data->mlx.win, 17, 0, exit_window, data);
 	// mlx_loop(data->mlx.mlx);
 	mlx_loop_hook(data->mlx.mlx, render_frames, data);

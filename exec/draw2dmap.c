@@ -28,7 +28,7 @@ void colour_floor_ceil(t_data *data)
     }
 }
 //i think for textures we use similar approach to draw them
-void    draw_walls(t_ray *ray, t_data *data, int i)
+void    draw_walls(t_ray *ray, t_data *data, int x)
 {
     int lineheight;
     int drawstart;
@@ -52,7 +52,7 @@ void    draw_walls(t_ray *ray, t_data *data, int i)
         colour = (colour & 0xfefefe) >> 1;
     while(drawstart < drawend)
     {
-        my_mlx_pixel_put(&data->image, i, drawstart, colour);
+        my_mlx_pixel_put(&data->image, x, drawstart, colour);
         drawstart++;
     }
 }
