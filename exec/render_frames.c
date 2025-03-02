@@ -83,9 +83,20 @@ void cast_rays(t_ray *ray, t_player *player, t_data *data)
         else
             ray->perp_wall_dist = ray->side_dist_y - ray->delta_dist_y;
         ray->line_height = (int) (WIN_HEIGHT/ ray->perp_wall_dist);
-        ray->wallx = player->pos_y + ray->perp_wall_dist * ray->ray_dir_y; // exact pos of where line hit in the wall//idk if it should be posy ray_dir_y when side==0, but thats what the document says
-        if(ray->side == 1)
+        // ray->wallx = player->pos_y + ray->perp_wall_dist * ray->ray_dir_y; // exact pos of where line hit in the wall//idk if it should be posy ray_dir_y when side==0, but thats what the document says
+        // if(ray->side == 1)
+        //     ray->wallx = player->pos_x + ray->perp_wall_dist * ray->ray_dir_x;
+        if (ray->side == 0) {
+            ray->wallx = player->pos_y + ray->perp_wall_dist * ray->ray_dir_y;
+            // Direction-specific correction for North
+            if (ray->step_x < 0)
+                ray->wallx = 1.0 - ray->wallx + floor(ray->wallx);
+        } else {
             ray->wallx = player->pos_x + ray->perp_wall_dist * ray->ray_dir_x;
+            // Direction-specific correction for West
+            if (ray->step_y < 0)
+                ray->wallx = 1.0 - ray->wallx + floor(ray->wallx);
+        }
         ray->wallx -= floor(ray->wallx);
         draw_walls(ray, data, x);
         x++;
