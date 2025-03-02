@@ -211,11 +211,11 @@ int	empty_line(char *str);
 int key_events(int keycode, t_data *data);
 int exit_window(t_data *data);
 int    render_frames(t_data *data);
-
+void move_player(t_data *data, double move_x, double move_y, t_cord vars);
 void move_horizontally(t_data *data, int direction);
 void move_vertically(t_data *data, int direction);
 void rotate(t_player *pl, int direction, t_data *data);
-void colour_floor_ceil(t_data *data);
+void colour_floor_ceiling(t_data *data);
 void    draw_walls(t_ray *ray, t_data *data, int x);
 void    destroy_imgs(t_data *data);
 #endif
