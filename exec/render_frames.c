@@ -6,12 +6,6 @@ void dda_algo(t_ray *ray, t_data *data)
     ray->hit = 0;
     while(!ray->hit)
     {
-        if(ray->map_x < 0 || ray->map_y < 0 || ray->map_y >= data->map.rows 
-            || ray->map_x >= (int)ft_strlen(data->map.map[ray->map_y]))
-        {
-            ray->hit = 1;
-            break;
-        }
         if (ray->side_dist_x < ray->side_dist_y)
         {
             ray->side_dist_x += ray->delta_dist_x;
@@ -23,6 +17,12 @@ void dda_algo(t_ray *ray, t_data *data)
             ray->side_dist_y += ray->delta_dist_y;
             ray->map_y += ray->step_y;
             ray->side = 1;
+        }
+        if(ray->map_x < 0 || ray->map_y < 0 || ray->map_y >= data->map.rows 
+            || ray->map_x >= (int)ft_strlen(data->map.map[ray->map_y]))
+        {
+            ray->hit = 1;
+            break;
         }
         if (data->map.map[ray->map_y][ray->map_x] == '1')
             ray->hit = 1;
@@ -99,6 +99,8 @@ int    render_frames(t_data *data)
     ft_bzero(data->image.addr, WIN_WIDTH * WIN_HEIGHT * (data->image.bpp / 8));
     gettimeofday(&current, NULL);
     data->delta_time = (current.tv_sec - data->last.tv_sec) + (current.tv_usec - data->last.tv_usec)* 1e-6;
+    if (data->delta_time > 0.1)
+        data->delta_time = 0.1;
     data->last = current;
     if(data->keys[0])
         move_vertically(data, MUP);
@@ -112,7 +114,7 @@ int    render_frames(t_data *data)
         rotate(&data->player, L_ROTATE, data);
     if(data->keys[5])
         rotate(&data->player, R_ROTATE, data);
-    colour_floor_ceil(data);
+    colour_floor_ceiling(data);
     cast_rays(&data->ray, &data->player, data);
     mlx_put_image_to_window(data->mlx.mlx, data->mlx.win, data->image.img, 0, 0);
     return(0);

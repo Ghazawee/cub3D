@@ -125,6 +125,26 @@ int key_release(int keycode, t_data *data)
 	return (0);
 }
 
+void init_texture(t_data *data)
+{
+	data->texture.no.img = mlx_xpm_file_to_image(data->mlx.mlx, data->elements.no, &data->texture.no.width, &data->texture.no.height);
+	data->texture.so.img = mlx_xpm_file_to_image(data->mlx.mlx, data->elements.so, &data->texture.so.width, &data->texture.so.height);
+	data->texture.we.img = mlx_xpm_file_to_image(data->mlx.mlx, data->elements.we, &data->texture.we.width, &data->texture.we.height);
+	data->texture.ea.img = mlx_xpm_file_to_image(data->mlx.mlx, data->elements.ea, &data->texture.ea.width, &data->texture.ea.height);
+	if (data->texture.no.img == NULL || data->texture.so.img == NULL || data->texture.we.img == NULL || data->texture.ea.img == NULL)
+	{
+		write(2, "Error: mlx_xpm_file_to_image failed\n", 36);
+		destroy_imgs(data);
+		mlx_destroy_display(data->mlx.mlx);
+		free(data->mlx.mlx);
+		free_data(data);
+		exit(1);
+	}
+	data->texture.no.addr = mlx_get_data_addr(data->texture.no.img, &data->texture.no.bpp, &data->texture.no.line_len, &data->texture.no.endian);
+	data->texture.so.addr = mlx_get_data_addr(data->texture.so.img, &data->texture.so.bpp, &data->texture.so.line_len, &data->texture.so.endian);
+	data->texture.we.addr = mlx_get_data_addr(data->texture.we.img, &data->texture.we.bpp, &data->texture.we.line_len, &data->texture.we.endian);
+	data->texture.ea.addr = mlx_get_data_addr(data->texture.ea.img, &data->texture.ea.bpp, &data->texture.ea.line_len, &data->texture.ea.endian);
+}
 
 void	init_start_game(t_data *data)
 {
@@ -136,10 +156,13 @@ void	init_start_game(t_data *data)
 		free_data(data);
 		exit(1);
 	}
+	init_texture(data);
 	data->mlx.win = mlx_new_window(data->mlx.mlx, WIN_WIDTH, WIN_HEIGHT, "cub3D");
 	if (!data->mlx.win)
 	{
 		write(2, "Error: mlx_new_window failed\n", 29);
+		destroy_imgs(data);
+		free(data->mlx.mlx);
 		free_data(data);
 		exit(1);
 	}

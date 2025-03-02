@@ -1,58 +1,115 @@
 #include "../cub3d.h"
 
-void colour_floor_ceil(t_data *data)
+
+int get_pixel_colour(t_textures *texture, int tex_x, int tex_y, t_ray *ray)
 {
-    int y;
+    t_image *current_tex;
+    
+    // Select texture based on wall direction
+    if (ray->side == 0) {
+        if (ray->ray_dir_x > 0)
+            current_tex = &texture->ea;
+        else
+            current_tex = &texture->we;
+    } else {
+        if (ray->ray_dir_y > 0)
+            current_tex = &texture->so;
+        else
+            current_tex = &texture->no;
+    }
+    
+    // Bounds checking
+    if (tex_x < 0 || tex_x >= current_tex->width || tex_y < 0 || tex_y >= current_tex->height)
+        return (0x000000);
+        
+    int offset = (tex_y * current_tex->line_len) + (tex_x * (current_tex->bpp / 8));
+    return (*(int*)(current_tex->addr + offset));
+}
+
+void colour_floor_ceiling(t_data *data)
+{
     int x;
+    int y;
 
     y = 0;
-    while(y < WIN_HEIGHT/2)
+    while(y < WIN_HEIGHT)
     {
         x = 0;
         while(x < WIN_WIDTH)
         {
-            my_mlx_pixel_put(&data->image, x, y, data->elements.ceiling);
-            x++;
-        }
-        y++;
-    }
-    while(y < WIN_HEIGHT -1)
-    {
-        x = 0;
-        while(x < WIN_WIDTH)
-        {
-            my_mlx_pixel_put(&data->image, x, y, data->elements.floor);
+            if(y < WIN_HEIGHT / 2)
+                my_mlx_pixel_put(&data->image, x, y, data->elements.ceiling);
+            else
+                my_mlx_pixel_put(&data->image, x, y, data->elements.floor);
             x++;
         }
         y++;
     }
 }
 //i think for textures we use similar approach to draw them
-void    draw_walls(t_ray *ray, t_data *data, int x)
+void draw_walls(t_ray *ray, t_data *data, int x)
 {
     int lineheight;
     int drawstart;
     int drawend;
     int colour;
+    double wall_x; // Where exactly the wall was hit
+    int tex_x, tex_y;
+    t_image *current_tex;
 
-    //ray has variable called lineheight now
-    //for the drawstart and drawend there is a struct t_draw, that contains i think everything for drawing
-    lineheight = (int)(WIN_HEIGHT / ray->perp_wall_dist); // height of line 1/perp_wall_dist * win_height to pixel the coordinate
-    drawstart = -lineheight / 2 + WIN_HEIGHT / 2; // win height/2 is the center of the screen, -lineheight/2, since lineheight goes above and below the center of screen
+    // Calculate height of line to draw
+    lineheight = (int)(WIN_HEIGHT / ray->perp_wall_dist);
+    
+    // Calculate lowest and highest pixel to fill in current stripe
+    drawstart = -lineheight / 2 + WIN_HEIGHT / 2;
     if(drawstart < 0)
         drawstart = 0;
     drawend = lineheight / 2 + WIN_HEIGHT / 2;
     if(drawend >= WIN_HEIGHT)
         drawend = WIN_HEIGHT - 1;
-    if (data->map.map[ray->map_y][ray->map_x] == '1')
-        colour = 0x00FF00;
-    else
-        colour = 0xFF0000;
-    if (ray->side == 1)
-        colour = (colour & 0xfefefe) >> 1;
-    while(drawstart < drawend)
+    
+    // Select texture based on wall direction
+    if (ray->side == 0) {
+        if (ray->ray_dir_x > 0)
+            current_tex = &data->texture.ea;  // East texture
+        else
+            current_tex = &data->texture.we;  // West texture
+        wall_x = data->player.pos_y + ray->perp_wall_dist * ray->ray_dir_y;
+    } else {
+        if (ray->ray_dir_y > 0)
+            current_tex = &data->texture.so;  // South texture
+        else
+            current_tex = &data->texture.no;  // North texture
+        wall_x = data->player.pos_x + ray->perp_wall_dist * ray->ray_dir_x;
+    }
+    
+    // Get the fractional part of wall_x
+    wall_x -= floor(wall_x);
+    
+    // Calculate the texture x-coordinate
+    tex_x = (int)(wall_x * (double)current_tex->width);
+    // Flip texture x-coordinate if needed
+    if ((ray->side == 0 && ray->ray_dir_x < 0) || 
+        (ray->side == 1 && ray->ray_dir_y > 0))
+        tex_x = current_tex->width - tex_x - 1;
+    
+    // Drawing the texture stripe
+    int y = drawstart;
+    while (y < drawend)
     {
-        my_mlx_pixel_put(&data->image, x, drawstart, colour);
-        drawstart++;
+        // Calculate texture y-coordinate
+        double step = 1.0 * current_tex->height / lineheight;
+        double tex_pos = (y - (-lineheight / 2 + WIN_HEIGHT / 2)) * step;
+        tex_y = (int)tex_pos & (current_tex->height - 1);
+        
+        // Get pixel color from texture
+        colour = get_pixel_colour(&data->texture, tex_x, tex_y, ray);
+        
+        // Make color darker for y-sides
+        if (ray->side == 1)
+            colour = (colour & 0xfefefe) >> 1;
+            
+        my_mlx_pixel_put(&data->image, x, y, colour);
+        y++;
     }
 }
