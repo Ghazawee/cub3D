@@ -6,7 +6,7 @@
 /*   By: hbasheer <hbasheer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 19:10:53 by hbasheer          #+#    #+#             */
-/*   Updated: 2025/03/04 19:10:54 by hbasheer         ###   ########.fr       */
+/*   Updated: 2025/04/03 17:09:29 by hbasheer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,6 @@ void	xpm_to_image(t_data *data)
 	{
 		write(2, "Error: mlx_xpm_file_to_image failed\n", 36);
 		destroy_imgs(data);
-		mlx_destroy_display(data->mlx.mlx);
 		free(data->mlx.mlx);
 		free_data(data);
 		exit(1);

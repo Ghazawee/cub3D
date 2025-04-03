@@ -6,7 +6,7 @@
 /*   By: hbasheer <hbasheer@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/04 19:10:48 by hbasheer          #+#    #+#             */
-/*   Updated: 2025/03/04 19:10:49 by hbasheer         ###   ########.fr       */
+/*   Updated: 2025/04/03 17:08:13 by hbasheer         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,11 +19,7 @@ int	exit_window(t_data *data)
 		mlx_destroy_image(data->mlx.mlx, data->image.img);
 	if (data->mlx.win)
 		mlx_destroy_window(data->mlx.mlx, data->mlx.win);
-	if (data->mlx.mlx)
-	{
-		mlx_destroy_display(data->mlx.mlx);
-		free(data->mlx.mlx);
-	}
+	free(data->mlx.mlx);
 	free_data(data);
 	exit(0);
 }

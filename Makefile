@@ -7,7 +7,7 @@ SRC = main3d.c $(PAR)/parse.c $(PAR)/validate_map.c $(PAR)/tex_map_utils.c\
 		get_next_line/get_next_line.c $(PAR)/map_utils.c $(PAR)/par_elem.c\
 		$(PAR)/utils.c $(EXE)/handle_actions.c $(EXE)/render_frames.c\
 		$(EXE)/draw2dmap.c $(EXE)/move_player.c $(EXE)/rays.c\
-		$(EXE)/frees.c $(EXE)/handle_keys.c $(EXE)/inits.c
+		$(EXE)/frees_errors.c $(EXE)/handle_keys.c $(EXE)/inits.c
 
 OBJ = $(SRC:.c=.o)
 
